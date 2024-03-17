@@ -11,8 +11,7 @@ class _TempPageState extends State<TempPage> {
   @override
   void initState() {
     super.initState();
-    // استخدم Timer لتأخير انتقال المستخدم إلى الصفحة الرئيسية بعد 5 ثوانٍ
-    Timer(Duration(seconds: 5), () {
+    Timer(Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Second()),
@@ -23,16 +22,18 @@ class _TempPageState extends State<TempPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 17, 17, 17),
       appBar: AppBar(
         title: Text('Temporary Page'),
+        backgroundColor: const Color.fromARGB(255, 22, 22, 22),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('hiiiii', style: TextStyle(fontSize: 24)),
+            Text('hiiiii', style: TextStyle(fontSize: 24, color: Colors.white)),
             SizedBox(height: 20),
-            CircularProgressIndicator(), // رمز التحميل أثناء انتظار 5 ثوانٍ
+            CircularProgressIndicator(),
           ],
         ),
       ),

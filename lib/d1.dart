@@ -7,7 +7,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Second(),
     );
   }
@@ -27,7 +27,7 @@ class _SecondState extends State<Second> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 18, 19, 18),
+        backgroundColor: const Color.fromARGB(255, 18, 19, 18),
         title: const Text(
           'Timesheet',
           style: TextStyle(color: Colors.white),
@@ -40,7 +40,7 @@ class _SecondState extends State<Second> {
                 MaterialPageRoute(builder: (context) => CalendarPage()),
               );
             },
-            icon: Icon(Icons.calendar_today, color: Colors.white),
+            icon: const Icon(Icons.calendar_today, color: Colors.white),
           ),
           IconButton(
             onPressed: () {
@@ -52,13 +52,13 @@ class _SecondState extends State<Second> {
                 MaterialPageRoute(builder: (context) => Help()),
               );
             },
-            icon: Icon(Icons.help, color: Colors.white),
+            icon: const Icon(Icons.help, color: Colors.white),
           ),
         ],
       ),
       body: Center(
         child: isHelpPressed
-            ? SingleChildScrollView(
+            ? const SingleChildScrollView(
                 padding: EdgeInsets.all(16.0),
                 child: Text(
                   '',
@@ -69,7 +69,7 @@ class _SecondState extends State<Second> {
                   ),
                 ),
               )
-            : Text(
+            : const Text(
                 "soufyane felate",
                 style: TextStyle(
                   color: Color.fromARGB(255, 248, 244, 236),
@@ -87,12 +87,12 @@ class CalendarPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 18, 19, 18),
+        backgroundColor: const Color.fromARGB(255, 18, 19, 18),
         title: const Text(
           'Calendar',
           style: TextStyle(color: Color.fromARGB(255, 247, 247, 247)),
         ),
-        iconTheme: IconThemeData(color: Colors.white), // Change icon color
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: const Center(
         child: Text(
@@ -109,12 +109,12 @@ class Help extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 18, 19, 18),
+        backgroundColor: const Color.fromARGB(255, 18, 19, 18),
         title: const Text(
           'Help',
           style: TextStyle(color: Colors.white),
         ),
-        iconTheme: IconThemeData(color: Colors.white), // Change icon color
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: const SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
@@ -196,6 +196,136 @@ class Help extends StatelessWidget {
 1- In project setting, you can choose the premium hour
 2- In premium hour setting, setup start/end time and date
 3- Premium hour will be calculated based on the project
+''',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 16.5,
+                  fontWeight: FontWeight.w500,
+                )),
+            Text(
+              'Export Time Record',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Color.fromARGB(255, 33, 22, 2),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+            ),
+            SizedBox(height: 15),
+            Text('''
+1- In the time record screen, click Export/Email icon
+2- In the data screen, you can choose time period and filter the data
+3- In the format screen, you can choose report format Excel, Html and Csv
+4- The report can group date by date, week, status, tag, project and client
+5- The report can be shown by summary or detailed
+6- You can also sort the column fields in the report
+''',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 16.5,
+                  fontWeight: FontWeight.w500,
+                )),
+            Text(
+              'Import Time Record',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Color.fromARGB(255, 33, 22, 2),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+            ),
+            SizedBox(height: 15),
+            Text('''1- In the time record screen, click import icon
+2- You can import time records from other app
+3- The import file is Csv format
+''',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 16.5,
+                  fontWeight: FontWeight.w500,
+                )),
+            Text(
+              'Invoice',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Color.fromARGB(255, 33, 22, 2),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+            ),
+            SizedBox(height: 16),
+            Text('''1- Click Plus icon to add new invoice
+2- Click Invoice record to open by PDF reader
+''',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 16.5,
+                  fontWeight: FontWeight.w500,
+                )),
+            Text(
+              'Add New Invoice',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Color.fromARGB(255, 33, 22, 2),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+            ),
+            SizedBox(height: 16),
+            Text('''1- First you have to select Client
+2- Then you can pick up work hours by clicking "Hours", only status in "open" or "follow up" available
+''',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 16.5,
+                  fontWeight: FontWeight.w500,
+                )),
+            Text(
+              'Charts',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Color.fromARGB(255, 33, 22, 2),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+            ),
+            SizedBox(height: 16),
+            Text(
+                '''1- Shows monthly amount and hours in bar chart and line chart
+2- Click Filter icon to filter by chart data by Project, Client, Tag and Status
+3- Click Dollar icon to show amount chart
+''',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 16.5,
+                  fontWeight: FontWeight.w500,
+                )),
+            Text(
+              'How To Backup/Restore Data',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Color.fromARGB(255, 33, 22, 2),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+            ),
+            SizedBox(height: 16),
+            Text('''1- It is import to backup database
+2- In the app, you can backup database by email, sdcard or google drive
+3- In the app, you can restore database by sdcard or google drive
+''',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 16.5,
+                  fontWeight: FontWeight.w500,
+                )),
+            Text(
+              'How To Purchase',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Color.fromARGB(255, 33, 22, 2),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+            ),
+            SizedBox(height: 16),
+            Text(
+                '''1- We have two versions: in-app purchase version and paid version
+2- The in-app purchase version, you can separately purchase functions(1. Export report in csv, html and excel, 2. Unlimited creating invoice)
+3- The paid version includes both functions
 ''',
                 textAlign: TextAlign.left,
                 style: TextStyle(
