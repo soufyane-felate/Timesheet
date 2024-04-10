@@ -1,7 +1,9 @@
-import 'dart:async';
+/*import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:timesheet_1/update_time.dart';
 
 import 'calendar_page.dart';
@@ -32,6 +34,7 @@ class _SecondState extends State<Second> {
   late Stopwatch _stopwatch;
   late Timer _timer;
   bool _isRunning = false;
+  bool _isPushInVisible = true; // Added state for Push In button visibility
 
   String? _selectedProject;
   String? _selectedClient;
@@ -40,6 +43,9 @@ class _SecondState extends State<Second> {
   void initState() {
     super.initState();
     _stopwatch = Stopwatch();
+  }
+
+  void _startTimer() {
     _timer = Timer.periodic(Duration(milliseconds: 30), _updateTime);
   }
 
@@ -59,7 +65,7 @@ class _SecondState extends State<Second> {
     if (_isRunning) {
       _stopwatch.stop();
     } else {
-      _stopwatch.start();
+      _startTimer();
     }
     setState(() {
       _isRunning = !_isRunning;
@@ -67,40 +73,19 @@ class _SecondState extends State<Second> {
   }
 
   void _resetTimer() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            "Want to stop?",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          //  content: Text("Are you sure you want to stop the timer?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _stopwatch.stop(); // Stop the stopwatch
-                _stopwatch.reset(); // reset the stopwatch
-                _isRunning = false; // Update running state
-                setState(() {});
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => update_time()),
-                );
-              },
-              child: Text("Confirm"),
-            ),
-          ],
-        );
-      },
+    _stopwatch.reset();
+    setState(() {});
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => MyHomePage()),
     );
+  }
+
+  void _pushInTimer() {
+    _startTimer();
+    setState(() {
+      _isPushInVisible = false;
+    });
   }
 
   Widget _buildDropdown(String label) {
@@ -211,29 +196,45 @@ class _SecondState extends State<Second> {
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 195,
-                    color: Colors.green,
-                    child: IconButton(
-                      icon: Icon(_isRunning ? Icons.pause : Icons.play_arrow),
-                      onPressed: _toggleTimer,
-                      iconSize: 48,
-                    ),
+              if (_isPushInVisible)
+                Container(
+                  width: 195,
+                  color: Colors.blue,
+                  child: IconButton(
+                    icon: Icon(Icons.push_pin),
+                    onPressed: _pushInTimer, // Starts timer and hides "Push In"
+                    iconSize: 48,
                   ),
-                  Container(
-                    width: 195,
-                    color: Colors.red,
-                    child: IconButton(
-                      icon: Icon(Icons.stop),
-                      onPressed: _resetTimer,
-                      iconSize: 48,
+                ),
+              if (!_isPushInVisible)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        width: 195,
+                        color: Colors.green,
+                        child: IconButton(
+                          icon:
+                              Icon(_isRunning ? Icons.pause : Icons.play_arrow),
+                          onPressed: _toggleTimer,
+                          iconSize: 48,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                    Expanded(
+                      child: Container(
+                        width: 195,
+                        color: Colors.red,
+                        child: IconButton(
+                          icon: Icon(Icons.stop),
+                          onPressed: _resetTimer,
+                          iconSize: 48,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -282,3 +283,4 @@ class TimerUtil {
     return "$minutesStr:$secondsStr";
   }
 }
+*/
