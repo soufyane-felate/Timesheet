@@ -5,21 +5,26 @@ void main() {
   runApp(UpdateTime());
 }
 
-class UpdateTime extends StatelessWidget {
-  bool status = false;
+class UpdateTime extends StatefulWidget {
+  @override
+  _UpdateTimeState createState() => _UpdateTimeState();
+}
 
-  Widget size() {
-    return SizedBox(
-      height: 0,
-      width: double.infinity,
-      child: Divider(
-        color: Color.fromARGB(255, 0, 0, 0),
-      ),
-    );
-  }
+class _UpdateTimeState extends State<UpdateTime> {
+  bool status = false;
 
   @override
   Widget build(BuildContext context) {
+    Widget size() {
+      return SizedBox(
+        height: 0,
+        width: double.infinity,
+        child: Divider(
+          color: Color.fromARGB(255, 0, 0, 0),
+        ),
+      );
+    }
+
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey,
@@ -61,7 +66,7 @@ class UpdateTime extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15, left: 5),
                           child: Text(
-                            "client2",
+                            "client",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -97,7 +102,9 @@ class UpdateTime extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 15, left: 5),
                           child: Text(
                             "who do you work for?",
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
                           ),
                         ),
                       ),
@@ -251,9 +258,9 @@ class UpdateTime extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 30),
                           child: Center(
                               child: Text(
-                                "Working hours",
-                                style: TextStyle(fontWeight: FontWeight.w500),
-                              )),
+                            "Working hours",
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          )),
                         ),
                       ),
                     ),
@@ -285,9 +292,9 @@ class UpdateTime extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 30),
                           child: Center(
                               child: Text(
-                                "Hourly Rate",
-                                style: TextStyle(fontWeight: FontWeight.w500),
-                              )),
+                            "Hourly Rate",
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          )),
                         ),
                       ),
                     ),
@@ -417,14 +424,42 @@ class UpdateTime extends StatelessWidget {
                   ],
                 ),
                 size(),
-                /*  Switch(
-                    value: status,
-                    onChanged: (val) {
-                      print("object");
-                      setState(() {
-                        status = val;
-                      });
-                 }),  */
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        height: 45,
+                        color: Color.fromARGB(255, 221, 221, 223),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 50),
+                          child: Center(
+                            child: Text(
+                              "Test",
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                        flex: 2,
+                        child: Container(
+                          color: Colors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 220),
+                            child: Switch(
+                                value: status,
+                                onChanged: (val) {
+                                  print("object");
+                                  setState(() {
+                                    status = val;
+                                  });
+                                }),
+                          ),
+                        )),
+                  ],
+                ),
                 MaterialButton(
                   minWidth: double.infinity,
                   color: Color.fromARGB(255, 221, 221, 223),
