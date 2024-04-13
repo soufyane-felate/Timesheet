@@ -37,7 +37,10 @@ dependencies:
   cupertino_icons: ^1.0.6
   table_calendar: ^3.1.1
   flutter_local_notifications: ^17.0.0
+  
   stop_watch_timer: ^3.1.1
+  google_nav_bar: ^5.0.6
+  flutter_background: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -65,7 +68,6 @@ flutter:
   assets:
      - images/timesheet.png
      - images/ofppt.png
-     - images/ofpptlogo.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

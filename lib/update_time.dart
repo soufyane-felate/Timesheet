@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(update_time());
+  runApp(UpdateTime());
 }
 
-class update_time extends StatelessWidget {
+class UpdateTime extends StatelessWidget {
   bool status = false;
 
   Widget size() {
@@ -251,9 +251,9 @@ class update_time extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 30),
                           child: Center(
                               child: Text(
-                            "Working hours",
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                          )),
+                                "Working hours",
+                                style: TextStyle(fontWeight: FontWeight.w500),
+                              )),
                         ),
                       ),
                     ),
@@ -285,9 +285,9 @@ class update_time extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 30),
                           child: Center(
                               child: Text(
-                            "Houtly Rate",
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                          )),
+                                "Hourly Rate",
+                                style: TextStyle(fontWeight: FontWeight.w500),
+                              )),
                         ),
                       ),
                     ),

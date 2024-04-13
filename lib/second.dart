@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:timesheet_1/update_time.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'calendar_page.dart';
 import 'help.dart';
+import 'update_time.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,23 +30,55 @@ class Second extends StatefulWidget {
 }
 
 class _SecondState extends State<Second> {
-  bool isHelpPressed = false;
   late Stopwatch _stopwatch;
   late Timer _timer;
   bool _isRunning = false;
-
-  String? _selectedProject;
-  String? _selectedClient;
+  int _selectedIndex = 0;
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
     super.initState();
     _stopwatch = Stopwatch();
     _timer = Timer.periodic(Duration(milliseconds: 30), _updateTime);
+    _initializeNotifications();
+  }
+
+  void _initializeNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  void _showNotification(String title, String body) async {
+    String elapsedTime = TimerUtil.formatTime(_stopwatch.elapsedMilliseconds);
+    body = '$body\nElapsed Time: $elapsedTime';
+
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      '1', 'Timesheet App', 
+      importance: Importance.max,
+      priority: Priority.high,
+      ticker: 'ticker',
+      enableVibration: false, // Disable vibration
+      playSound: false, // Disable sound
+    );
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      platformChannelSpecifics,
+    );
   }
 
   void _updateTime(Timer timer) {
-    if (_stopwatch.isRunning) {
+    if (_isRunning) {
+      _showNotification('Stopwatch Running', 'Elapsed Time:');
       setState(() {});
     }
   }
@@ -75,7 +109,6 @@ class _SecondState extends State<Second> {
             "Want to stop?",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          //  content: Text("Are you sure you want to stop the timer?"),
           actions: [
             TextButton(
               onPressed: () {
@@ -92,7 +125,7 @@ class _SecondState extends State<Second> {
                 setState(() {});
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => update_time()),
+                  MaterialPageRoute(builder: (context) => UpdateTime()),
                 );
               },
               child: Text("Confirm"),
@@ -116,10 +149,8 @@ class _SecondState extends State<Second> {
         'Holiday',
         'Unpaid Leave',
       ];
-      selectedValue = _selectedProject;
     } else if (label == 'Client') {
       items = ['Default Client'];
-      selectedValue = _selectedClient;
     }
 
     return DropdownButton<String>(
@@ -131,15 +162,7 @@ class _SecondState extends State<Second> {
         );
       }).toList(),
       hint: Text(label),
-      onChanged: (String? value) {
-        setState(() {
-          if (label == 'Project') {
-            _selectedProject = value;
-          } else if (label == 'Client') {
-            _selectedClient = value;
-          }
-        });
-      },
+      onChanged: (String? value) {},
     );
   }
 
@@ -189,7 +212,6 @@ class _SecondState extends State<Second> {
           IconButton(
             onPressed: () {
               setState(() {
-                isHelpPressed = true;
               });
               Navigator.push(
                 context,
@@ -254,17 +276,84 @@ class _SecondState extends State<Second> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildButton('Time', Icons.access_time, onPressed: () {}),
-            _buildButton('Statistics', Icons.bar_chart, onPressed: () {}),
-            _buildButton('Invoice', Icons.receipt, onPressed: () {}),
-            _buildButton('Settings', Icons.settings, onPressed: () {}),
-            _buildButton('Data', Icons.data_usage, onPressed: () {}),
-            _buildButton('Exit', Icons.exit_to_app, onPressed: () => exit(0)),
-          ],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(color: Colors.white, boxShadow: [
+          BoxShadow(blurRadius: 20, color: Colors.black.withOpacity(.1))
+        ]),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+            child: GNav(
+              rippleColor: Colors.grey[300]!,
+              hoverColor: Colors.grey[100]!,
+              gap: 8,
+              activeColor: Colors.black,
+              iconSize: 24,
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              tabs: [
+                GButton(
+                  icon: Icons.access_time,
+                  text: 'Time',
+                  textStyle: TextStyle(
+                    color: const Color.fromARGB(255, 3, 35, 61),
+                  ),
+                  backgroundColor: Color.fromARGB(255, 7, 230, 238),
+                  onPressed: () {},
+                ),
+                GButton(
+                  icon: Icons.bar_chart,
+                  text: 'Statistics',
+                  textStyle: TextStyle(
+                    color: const Color.fromARGB(255, 3, 35, 61),
+                  ),
+                  backgroundColor: Color.fromARGB(255, 7, 230, 238),
+                  onPressed: () {},
+                ),
+                GButton(
+                  icon: Icons.receipt,
+                  text: 'Invoice',
+                  textStyle: TextStyle(
+                    color: const Color.fromARGB(255, 3, 35, 61),
+                  ),
+                  backgroundColor: Color.fromARGB(255, 7, 230, 238),
+                  onPressed: () {},
+                ),
+                GButton(
+                  icon: Icons.settings,
+                  text: 'Settings',
+                  textStyle: TextStyle(
+                    color: const Color.fromARGB(255, 3, 35, 61),
+                  ),
+                  backgroundColor: Color.fromARGB(255, 7, 230, 238),
+                  onPressed: () {},
+                ),
+                GButton(
+                  icon: Icons.data_usage,
+                  text: 'Data',
+                  textStyle: TextStyle(
+                    color: const Color.fromARGB(255, 3, 35, 61),
+                  ),
+                  backgroundColor: Color.fromARGB(255, 7, 230, 238),
+                  onPressed: () {},
+                ),
+                GButton(
+                  icon: Icons.exit_to_app,
+                  text: 'Exit',
+                  textStyle: TextStyle(
+                    color: const Color.fromARGB(255, 3, 35, 61),
+                  ),
+                  backgroundColor: Color.fromARGB(255, 7, 230, 238),
+                  onPressed: () => exit(0),
+                ),
+              ],
+              selectedIndex: _selectedIndex,
+              onTabChange: (index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+            ),
+          ),
         ),
       ),
     );
