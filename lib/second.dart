@@ -59,12 +59,13 @@ class _SecondState extends State<Second> {
 
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      '1', 'Timesheet App', 
+      '1',
+      'Timesheet App',
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',
-      enableVibration: false, // Disable vibration
-      playSound: false, // Disable sound
+      enableVibration: false,
+      playSound: false,
     );
     const NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
@@ -119,9 +120,9 @@ class _SecondState extends State<Second> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                _stopwatch.stop(); // Stop the stopwatch
-                _stopwatch.reset(); // reset the stopwatch
-                _isRunning = false; // Update running state
+                _stopwatch.stop();
+                _stopwatch.reset();
+                _isRunning = false;
                 setState(() {});
                 Navigator.push(
                   context,
@@ -211,8 +212,7 @@ class _SecondState extends State<Second> {
           ),
           IconButton(
             onPressed: () {
-              setState(() {
-              });
+              setState(() {});
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Help()),
