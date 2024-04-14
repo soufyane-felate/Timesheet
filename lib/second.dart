@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 import 'calendar_page.dart';
 import 'help.dart';
@@ -36,6 +36,9 @@ class _SecondState extends State<Second> {
   int _selectedIndex = 0;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
+
+  String? _selectedProject;
+  String? _selectedClient;
 
   @override
   void initState() {
@@ -106,7 +109,7 @@ class _SecondState extends State<Second> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
+          title: const Text(
             "Want to stop?",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
@@ -126,7 +129,9 @@ class _SecondState extends State<Second> {
                 setState(() {});
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => UpdateTime()),
+                  MaterialPageRoute(
+                    builder: (context) => UpdateTime(selectedProject: _selectedProject),
+                  ),
                 );
               },
               child: Text("Confirm"),
@@ -150,8 +155,10 @@ class _SecondState extends State<Second> {
         'Holiday',
         'Unpaid Leave',
       ];
+      selectedValue = _selectedProject; 
     } else if (label == 'Client') {
       items = ['Default Client'];
+      selectedValue = _selectedClient; 
     }
 
     return DropdownButton<String>(
@@ -163,7 +170,15 @@ class _SecondState extends State<Second> {
         );
       }).toList(),
       hint: Text(label),
-      onChanged: (String? value) {},
+      onChanged: (String? value) {
+        setState(() {
+          if (label == 'Project') {
+            _selectedProject = value;
+          } else if (label == 'Client') {
+            _selectedClient = value;
+          }
+        });
+      },
     );
   }
 
@@ -260,8 +275,8 @@ class _SecondState extends State<Second> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildDropdown('Project'),
-                  _buildDropdown('Client'),
+                  _buildDropdown('Project'), 
+                  _buildDropdown('Client'),  
                 ],
               ),
               SizedBox(height: 16),

@@ -1,17 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(UpdateTime());
-}
+import 'package:intl/intl.dart';
 
 class UpdateTime extends StatefulWidget {
+  final String? selectedProject;
+
+  UpdateTime({this.selectedProject});
+
   @override
   _UpdateTimeState createState() => _UpdateTimeState();
 }
 
 class _UpdateTimeState extends State<UpdateTime> {
   bool status = false;
+
+  String _getCurrentDate() {
+    return DateFormat('dd/MM').format(DateTime.now());
+  }
+
+  String _getCurrentTime() {
+    return DateFormat('HH:mm').format(DateTime.now());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +43,12 @@ class _UpdateTimeState extends State<UpdateTime> {
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.black,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -66,7 +81,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15, left: 5),
                           child: Text(
-                            "client",
+                            widget.selectedProject ?? "",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -138,7 +153,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15, left: 5),
                           child: Text(
-                            "08/04",
+                            _getCurrentDate(),
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -152,7 +167,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15, left: 5),
                           child: Text(
-                            "21:30",
+                            _getCurrentTime(),
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -187,7 +202,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15, left: 5),
                           child: Text(
-                            "08/04",
+                            _getCurrentDate(),
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -201,7 +216,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15, left: 5),
                           child: Text(
-                            "21:30",
+                            _getCurrentTime(),
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -380,11 +395,16 @@ class _UpdateTimeState extends State<UpdateTime> {
                     Expanded(
                       flex: 2,
                       child: Container(
-                        height: 45,
+                        height: 50,
                         color: Colors.white,
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 15, left: 5),
-                          child: TextField(),
+                          padding: const EdgeInsets.only(bottom: 10, left: 5),
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: "",
+                            ),
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          ),
                         ),
                       ),
                     ),
@@ -435,7 +455,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(left: 50),
                           child: Center(
                             child: Text(
-                              "Test",
+                              "Billable",
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
