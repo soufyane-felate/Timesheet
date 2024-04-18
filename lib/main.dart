@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timesheet_1/btnButtomFeatures/language_controller.dart';
 import 'package:timesheet_1/second.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? savedLocale = prefs.getString('locale');
+
+  runApp(MyApp(savedLocale));
 }
 
 class MyApp extends StatelessWidget {
+  final String? savedLocale;
+
+  MyApp(this.savedLocale);
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
+      translations: LanguageController(),
+      locale: savedLocale != null ? Locale(savedLocale!) : Locale('en'),
+      fallbackLocale: Locale('en'),
     );
   }
 }
@@ -25,13 +39,9 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Second()),
-      );
+      Get.offAll(Second());
     });
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -46,3 +56,5 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
+
+// الأكواد الأخرى هنا

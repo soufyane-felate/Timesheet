@@ -2,25 +2,13 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-
-import 'calendar_page.dart';
-import 'help.dart';
-import 'update_time.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Second(),
-    );
-  }
-}
+import 'package:timesheet_1/btnButtomFeatures/settings.dart';
+import 'package:timesheet_1/calendar_page.dart';
+import 'package:timesheet_1/help.dart';
+import 'package:timesheet_1/update_time.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Second extends StatefulWidget {
   const Second({Key? key}) : super(key: key);
@@ -109,16 +97,14 @@ class _SecondState extends State<Second> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text(
-            "Want to stop?",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+          title: Text("want_to_stop".tr,
+              style: TextStyle(fontWeight: FontWeight.bold)),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Cancel"),
+              child: Text("cancel".tr),
             ),
             TextButton(
               onPressed: () {
@@ -130,11 +116,12 @@ class _SecondState extends State<Second> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => UpdateTime(selectedProject: _selectedProject),
+                    builder: (context) =>
+                        UpdateTime(selectedProject: _selectedProject),
                   ),
                 );
               },
-              child: Text("Confirm"),
+              child: Text("confirm".tr),
             ),
           ],
         );
@@ -146,19 +133,19 @@ class _SecondState extends State<Second> {
     List<String> items = [];
     String? selectedValue;
 
-    if (label == 'Project') {
+    if (label == 'project'.tr) {
       items = [
-        'Hourly Rate',
-        'Flat Rate',
-        'Overtime',
-        'Night Shift',
-        'Holiday',
-        'Unpaid Leave',
+        'hourly_rate'.tr,
+        'flat_rate'.tr,
+        'overtime'.tr,
+        'night_shift'.tr,
+        'holiday'.tr,
+        'unpaid_leave'.tr,
       ];
-      selectedValue = _selectedProject; 
-    } else if (label == 'Client') {
-      items = ['Default Client'];
-      selectedValue = _selectedClient; 
+      selectedValue = _selectedProject;
+    } else if (label == 'client'.tr) {
+      items = ['default_client'.tr];
+      selectedValue = _selectedClient;
     }
 
     return DropdownButton<String>(
@@ -172,9 +159,9 @@ class _SecondState extends State<Second> {
       hint: Text(label),
       onChanged: (String? value) {
         setState(() {
-          if (label == 'Project') {
+          if (label == 'project'.tr) {
             _selectedProject = value;
-          } else if (label == 'Client') {
+          } else if (label == 'client'.tr) {
             _selectedClient = value;
           }
         });
@@ -211,10 +198,7 @@ class _SecondState extends State<Second> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 18, 19, 18),
-        title: const Text(
-          'Timesheet',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: Text('timesheet'.tr, style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
             onPressed: () {
@@ -223,7 +207,7 @@ class _SecondState extends State<Second> {
                 MaterialPageRoute(builder: (context) => CalendarPage()),
               );
             },
-            icon: const Icon(Icons.calendar_today, color: Colors.white),
+            icon: Icon(Icons.calendar_today, color: Colors.white),
           ),
           IconButton(
             onPressed: () {
@@ -233,7 +217,7 @@ class _SecondState extends State<Second> {
                 MaterialPageRoute(builder: (context) => Help()),
               );
             },
-            icon: const Icon(Icons.help, color: Colors.white),
+            icon: Icon(Icons.help, color: Colors.white),
           ),
         ],
       ),
@@ -275,16 +259,16 @@ class _SecondState extends State<Second> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildDropdown('Project'), 
-                  _buildDropdown('Client'),  
+                  _buildDropdown('project'.tr),
+                  _buildDropdown('client'.tr),
                 ],
               ),
               SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildCounter('Day', '00:00h'),
-                  _buildCounter('Month', '00:00h'),
+                  _buildCounter('day'.tr, '00:00h'),
+                  _buildCounter('month'.tr, '00:00h'),
                 ],
               ),
             ],
@@ -308,7 +292,7 @@ class _SecondState extends State<Second> {
               tabs: [
                 GButton(
                   icon: Icons.access_time,
-                  text: 'Time',
+                  text: 'Time'.tr,
                   textStyle: TextStyle(
                     color: const Color.fromARGB(255, 3, 35, 61),
                   ),
@@ -317,7 +301,7 @@ class _SecondState extends State<Second> {
                 ),
                 GButton(
                   icon: Icons.bar_chart,
-                  text: 'Statistics',
+                  text: 'statistics'.tr,
                   textStyle: TextStyle(
                     color: const Color.fromARGB(255, 3, 35, 61),
                   ),
@@ -326,7 +310,7 @@ class _SecondState extends State<Second> {
                 ),
                 GButton(
                   icon: Icons.receipt,
-                  text: 'Invoice',
+                  text: 'invoice'.tr,
                   textStyle: TextStyle(
                     color: const Color.fromARGB(255, 3, 35, 61),
                   ),
@@ -335,16 +319,22 @@ class _SecondState extends State<Second> {
                 ),
                 GButton(
                   icon: Icons.settings,
-                  text: 'Settings',
+                  text: 'settings'.tr,
                   textStyle: TextStyle(
                     color: const Color.fromARGB(255, 3, 35, 61),
                   ),
                   backgroundColor: Color.fromARGB(255, 7, 230, 238),
-                  onPressed: () {},
+                  onPressed: () {
+                    setState(() {});
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => settings()),
+                    );
+                  },
                 ),
                 GButton(
                   icon: Icons.data_usage,
-                  text: 'Data',
+                  text: 'data'.tr,
                   textStyle: TextStyle(
                     color: const Color.fromARGB(255, 3, 35, 61),
                   ),
@@ -353,7 +343,7 @@ class _SecondState extends State<Second> {
                 ),
                 GButton(
                   icon: Icons.exit_to_app,
-                  text: 'Exit',
+                  text: 'exit'.tr,
                   textStyle: TextStyle(
                     color: const Color.fromARGB(255, 3, 35, 61),
                   ),
