@@ -9,8 +9,8 @@ class Help extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 18, 19, 18),
-        title: const Text(
-          'Help',
+        title: Text(
+          "Help".tr,
           style: TextStyle(color: Colors.white),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
@@ -32,7 +32,7 @@ class Help extends StatelessWidget {
             Text(
               '''1- ${'Before starting, you have to setup Clients, Projects, and Company in the settings'.tr}
 2- ${'Then you can add time record'.tr}
-3- ${'You can analyze time records by bar/line chart'.tr}
+3- ${'You can analyst time records by bar/line chart'.tr}
 4- ${'You may export time records in HTML, EXCEL, and CSV file format'.tr}
 5- ${'You may invoice time record in PDF and send to client for the payment'.tr}''',
               textAlign: TextAlign.left,
@@ -215,7 +215,7 @@ class Help extends StatelessWidget {
             SizedBox(height: 16),
             Text(
                 '''1- ${'We have two versions: in-app purchase version and paid version'.tr}
-2- ${'The in-app purchase version, you can separately purchase functions(1. Export report in csv, html and excel, 2. Unlimited creating invoice)'.tr}
+2- ${'The in-app purchase version, you can separately purchase functions (1. Export report in csv, html and excel, 2. Unlimited creating invoice)'.tr}
 3- ${'The paid version includes both functions'.tr}''',
                 textAlign: TextAlign.left,
                 style: TextStyle(

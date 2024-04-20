@@ -45,6 +45,8 @@ dependencies:
   provider: ^6.1.2
   get: ^4.6.6
   get_storage: ^2.1.1
+  firebase_core: ^2.30.0
+  firebase_messaging: ^14.8.2
 
 dev_dependencies:
   flutter_test:

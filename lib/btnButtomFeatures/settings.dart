@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:timesheet_1/btnButtomFeatures/LanguageSelection.dart';
 import 'package:timesheet_1/help.dart';
+import 'package:get/get.dart';
+
 
 void main() {
   runApp(settings());
@@ -20,7 +22,7 @@ class _settingsState extends State<settings> {
       home: Scaffold(
         appBar: AppBar(
           title: Text(
-            "Settings",
+            "settings".tr,
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.black,
@@ -34,7 +36,7 @@ class _settingsState extends State<settings> {
         body: ListView(
           children: [
             ListTile(
-              title: Text('Help'),
+              title: Text('Help'.tr),
               onTap: () {
               setState(() {});
               Navigator.push(
@@ -43,7 +45,7 @@ class _settingsState extends State<settings> {
               );              },
             ),
             ListTile(
-              title: Text('Language'),
+              title: Text('language'.tr),
               onTap: () {
                  Navigator.push(
                   context,
@@ -51,9 +53,9 @@ class _settingsState extends State<settings> {
                 );              },
             ),
             ListTile(
-              title: Text('Theme'),
+              title: Text('Theme'.tr),
               onTap: () {
-                // Add functionality for Theme item
+                
               },
             ),
           ],

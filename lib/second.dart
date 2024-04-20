@@ -130,44 +130,45 @@ class _SecondState extends State<Second> {
   }
 
   Widget _buildDropdown(String label) {
-    List<String> items = [];
-    String? selectedValue;
+  List<String> items = [];
+  String? selectedValue;
 
-    if (label == 'project'.tr) {
-      items = [
-        'hourly_rate'.tr,
-        'flat_rate'.tr,
-        'overtime'.tr,
-        'night_shift'.tr,
-        'holiday'.tr,
-        'unpaid_leave'.tr,
-      ];
-      selectedValue = _selectedProject;
-    } else if (label == 'client'.tr) {
-      items = ['default_client'.tr];
-      selectedValue = _selectedClient;
-    }
-
-    return DropdownButton<String>(
-      value: selectedValue,
-      items: items.map((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-      hint: Text(label),
-      onChanged: (String? value) {
-        setState(() {
-          if (label == 'project'.tr) {
-            _selectedProject = value;
-          } else if (label == 'client'.tr) {
-            _selectedClient = value;
-          }
-        });
-      },
-    );
+  if (label == 'project'.tr) {
+    items = [
+      'hourly_rate'.tr,
+      'flat_rate'.tr,
+      'overtime'.tr,
+      'night_shift'.tr,
+      'holiday'.tr,
+      'unpaid_leave'.tr,
+    ];
+    selectedValue = _selectedProject;
+  } else if (label == 'client'.tr) {
+    items = ['default_client'.tr];
+    selectedValue = _selectedClient;
   }
+
+  return DropdownButton<String>(
+    value: selectedValue,
+    items: items.map((String value) {
+      return DropdownMenuItem<String>(
+        value: value,
+        child: Text(value),
+      );
+    }).toList(),
+    hint: Text(label),
+    onChanged: (String? value) {
+      setState(() {
+        if (label == 'project'.tr) {
+          _selectedProject = value;
+        } else if (label == 'client'.tr) {
+          _selectedClient = value;
+        }
+      });
+    },
+  );
+}
+
 
   Widget _buildCounter(String label, String value) {
     return Column(

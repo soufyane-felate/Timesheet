@@ -4,16 +4,16 @@ import 'package:get/get.dart';
 class LanguageSelection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final currentLocale = Get.locale; // Check for active locale
+    final currentLocale = Get.locale;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('language'.tr), // Translated title
+        title: Text('language'.tr),
       ),
       body: ListView(
         children: [
           ListTile(
-            title: Text('arabic'.tr), // Translated "Arabic"
+            title: Text('arabic'.tr),
             trailing:
                 currentLocale?.languageCode == 'ar' ? Icon(Icons.check) : null,
             onTap: () {
@@ -21,7 +21,7 @@ class LanguageSelection extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Text('english'.tr), // Translated "English"
+            title: Text('english'.tr),
             trailing:
                 currentLocale?.languageCode == 'en' ? Icon(Icons.check) : null,
             onTap: () {
@@ -29,7 +29,7 @@ class LanguageSelection extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Text('french'.tr), // Translated "French"
+            title: Text('french'.tr),
             trailing:
                 currentLocale?.languageCode == 'fr' ? Icon(Icons.check) : null,
             onTap: () {
@@ -37,7 +37,7 @@ class LanguageSelection extends StatelessWidget {
             },
           ),
           ListTile(
-            title: Text('german'.tr), // Translated "German"
+            title: Text('german'.tr),
             trailing:
                 currentLocale?.languageCode == 'de' ? Icon(Icons.check) : null,
             onTap: () {
@@ -85,6 +85,8 @@ class LanguageController extends Translations {
         },
         'ar': {
           "language": "اللغة",
+          "Help": "مساعدة",
+          "Theme": "موضوع",
           "arabic": "العربية",
           "english": "الإنجليزية",
           "french": "الفرنسية",
@@ -112,6 +114,8 @@ class LanguageController extends Translations {
           "holiday": "عطلة رسمية",
           "unpaid_leave": "إجازة غير مدفوعة",
           "default_client": "العميل الافتراضي",
+          'You may export time records in HTML, EXCEL, and CSV file format':
+              'فيمكنك تصدير سجلات الوقت بتنسيق ملف HTML، EXCEL، و CSV',
           "Before starting, you have to setup Clients, Projects, and Company in the settings":
               "قبل البدء، يجب عليك إعداد العملاء والمشاريع والشركة في الإعدادات",
           "Click Add Multiple Records icon to add multiple records at once":
@@ -177,6 +181,8 @@ class LanguageController extends Translations {
               "يمكنك استيراد سجلات الوقت من تطبيق آخر",
           "The import file is Csv format": "الملف المستورد هو بتنسيق Csv",
           "Invoice": "الفاتورة",
+          'You may invoice time record in PDF and send to client for the payment':
+              'فيمكنك إرسال فاتورة سجل الوقت في صيغة PDF إلى العميل للدفع',
           "Click Plus icon to add new invoice":
               "انقر على أيقونة الزائد لإضافة فاتورة جديدة",
           "Click Invoice record to open by PDF reader":
@@ -206,10 +212,28 @@ class LanguageController extends Translations {
           "The in-app purchase version, you can separately purchase functions (1. Export report in csv, html and excel, 2. Unlimited creating invoice)":
               "في نسخة الشراء داخل التطبيق، يمكنك شراء الوظائف بشكل منفصل (1. تصدير التقرير في صيغة CSV، HTML، و Excel، 2. إنشاء الفواتير بدون حدود)",
           "The paid version includes both functions":
-              "النسخة المدفوعة تتضمن كلا الوظيفتين"
+              "النسخة المدفوعة تتضمن كلا الوظيفتين",
+          'Notes': 'ملاحظات',
+          "Status": 'الحالة',
+          "Open": " مفتوح",
+          "Billable": " مدفوع الأجر",
+          "Add Expense / Deduction": " إضافة مصروف / خصم",
+          "Add Mileage": " إضافة المسافة",
+          "Time in": " وقت البدء",
+          "Time out": " وقت الانتهاء",
+          "Break": " استراحة",
+          "Minutes": " دقائق",
+          "Working hours": " ساعات العمل",
+          "Hourly Rate": " الأجرة بالساعة",
+          "Amount": " المبلغ",
+          "Description": "الوصف",
+          "Paid Leave": " إجازة مدفوعة الأجر",
+          "Default Client": " العميل الافتراضي",
         },
         'fr': {
           "language": "Langue",
+          "Help": "Aide",
+          "Theme": "Thème",
           "arabic": "Arabe",
           "english": "Anglais",
           "french": "Français",
@@ -234,6 +258,10 @@ class LanguageController extends Translations {
           "flat_rate": "Taux fixe",
           "overtime": "Heures supplémentaires",
           "night_shift": "Travail de nuit",
+          'You may invoice time record in PDF and send to client for the payment':
+              "Vous pouvez facturer le relevé de temps au format PDF et l'envoyer au client pour le paiement",
+          'You may export time records in HTML, EXCEL, and CSV file format':
+              'Vous pouvez exporter les enregistrements de temps au format de fichier HTML, EXCEL et CSV',
           "holiday": "Jour férié",
           "unpaid_leave": "Congé non payé",
           "default_client": "Client par défaut",
@@ -309,10 +337,54 @@ class LanguageController extends Translations {
           "The in-app purchase version, you can separately purchase functions (1. Export report in csv, html and excel, 2. Unlimited creating invoice)":
               "Dans la version avec achat intégré dans l'application, vous pouvez acheter séparément les fonctions (1. Exporter le rapport en CSV, HTML et Excel, 2. Création illimitée de factures)",
           "The paid version includes both functions":
-              "La version payante comprend les deux fonctions"
+              "La version payante comprend les deux fonctions",
+          'In project setting, you can choose Hour/Flat Rate':
+              'Dans les paramètres du projet, vous pouvez choisir entre le tarif horaire ou forfaitaire.',
+          'When you add a new time record, choose the Hour/Flat Rate project':
+              'Lorsque vous ajoutez un nouveau relevé de temps, choisissez le projet Tarif horaire ou forfaitaire.',
+          'The new time record will be Hour/Flat Rate based on the project setting':
+              'Le nouveau relevé de temps sera basé sur le tarif horaire ou forfaitaire en fonction des paramètres du projet.',
+          'Notes': 'Remarques',
+          'In project setting, you can choose Hour/Flat Rate':
+              ' Dans les paramètres du projet, vous pouvez choisir entre le tarif horaire ou forfaitaire.',
+          'Click Title to change period':
+              ' Cliquez sur le titre pour changer la période.',
+          'Click Plus icon to add new time record':
+              " Cliquez sur l'icône Plus pour ajouter un nouveau relevé de temps.",
+          'Click \'Add Multiple Records\' icon to add multiple records at once':
+              " Cliquez sur l'icône « Ajouter plusieurs enregistrements » pour ajouter plusieurs enregistrements en une seule fois.",
+          'Click Export/Email icon to export/email in HTML, EXCEL or CSV format':
+              "Cliquez sur l'icône Exporter/Envoyer par e-mail pour exporter/envoyer par e-mail au format HTML, EXCEL ou CSV.",
+          'Click Calendar icon to view in calendar mode':
+              " Cliquez sur l'icône Calendrier pour afficher en mode calendrier.",
+          'Click Filter icon to filter data by Tag, Status, Client and Project':
+              "Cliquez sur l'icône Filtre pour filtrer les données par étiquette, statut, client et projet.",
+          'Click Sort icon to sort data by Date(default), Amount, Project and Client':
+              "Cliquez sur l'icône Trier pour trier les données par date (par défaut), montant, projet et client.",
+          'Click Time record to update, delete and copy':
+              "Cliquez sur l'enregistrement de temps pour mettre à jour, supprimer et copier.",
+          'Long click Time record for multiple selection':
+              " Appuyez longuement sur l'enregistrement de temps pour une sélection multiple.",
+          "Status": "Statut",
+          "Open": "Ouvert",
+          "Billable": "Facturable",
+          "Add Expense / Deduction": " Ajouter une dépense / déduction",
+          "Add Mileage": "Ajouter un kilométrage",
+          "Time in": "Heure d'entrée",
+          "Time out": " Heure de sortie",
+          "Break": "Pause",
+          "Minutes": " Minutes",
+          "Working hours": "Heures de travail",
+          "Hourly Rate": "Taux horaire",
+          "Amount": "Montant",
+          "Description": "Description",
+          "Paid Leave": "Congé payé",
+          "Default Client": "Client par défaut",
         },
         'de': {
           "language": "Sprache",
+          "Help": "Hilfe",
+          "Theme": "Thema",
           "arabic": "Arabisch",
           "english": "Englisch",
           "french": "Französisch",
@@ -340,6 +412,10 @@ class LanguageController extends Translations {
           "holiday": "Feiertag",
           "unpaid_leave": "Unbezahlter Urlaub",
           "default_client": "Standardkunde",
+          'You may invoice time record in PDF and send to client for the payment':
+              'Sie können die Zeitaufzeichnung als PDF-Rechnung an den Kunden senden, um die Zahlung zu erhalten',
+          'You may export time records in HTML, EXCEL, and CSV file format':
+              'Sie können die Zeiterfassungsdaten im HTML-, EXCEL- und CSV-Dateiformat exportieren',
           "Before starting, you have to setup Clients, Projects, and Company in the settings":
               "Bevor Sie beginnen, müssen Sie Kunden, Projekte und Unternehmen in den Einstellungen einrichten",
           "Click Add Multiple Records icon to add multiple records at once":
@@ -409,7 +485,53 @@ class LanguageController extends Translations {
           "The in-app purchase version, you can separately purchase functions (1. Export report in csv, html and excel, 2. Unlimited creating invoice)":
               "In der In-App-Kaufversion können Sie Funktionen separat kaufen (1. Bericht exportieren in CSV, HTML und Excel, 2. Unbegrenztes Erstellen von Rechnungen)",
           "The paid version includes both functions":
-              "Die kostenpflichtige Version enthält beide Funktionen"
+              "Die kostenpflichtige Version enthält beide Funktionen",
+          "Click Filter icon to filter data by Tag, Status, Client and Project":
+              "Klicken Sie auf das Filter-Symbol, um Daten nach Tag, Status, Kunde und Projekt zu filtern.",
+          "Click Sort icon to sort data by Date(default), Amount, Project and Client":
+              "Klicken Sie auf das Sortier-Symbol, um Daten nach Datum (Standard), Betrag, Projekt und Kunde zu sortieren.",
+          "Click 'Add Multiple Records' icon to add multiple records at once":
+              "Klicken Sie auf das Symbol 'Mehrere Datensätze hinzufügen', um mehrere Datensätze auf einmal hinzuzufügen.",
+          "Click Plus icon to add new time record":
+              "Klicken Sie auf das Plus-Symbol, um einen neuen Zeitdatensatz hinzuzufügen.",
+          'Click Title to change period':
+              "Klicken Sie auf den Titel, um den Zeitraum zu ändern.",
+          "In project setting, you can choose Hour/Flat Rate":
+              'In den Projekteinstellungen können Sie die Stundensatz- oder Pauschalpreisoption wählen.',
+          "When you add a new time record, choose the Hour/Flat Rate project":
+              'Wenn Sie einen neuen Zeiteintrag hinzufügen, wählen Sie das Projekt mit Stunden- oder Pauschalpreisen aus.',
+          "The new time record will be Hour/Flat Rate based on the project setting":
+              'Der neue Zeiteintrag wird basierend auf den Projekteinstellungen für Stunden- oder Pauschalpreise erstellt.',
+          'How To Use': 'Wie benutzt man es?',
+          'Timesheet': 'Zeittabelle',
+          'Click Time record to update, delete and copy':
+              'Klicken Sie auf den Zeitstempel, um ihn zu aktualisieren, zu löschen und zu kopieren.',
+          'Long click Time record for multiple selection':
+              'Langes Drücken des Zeitstempels für Mehrfachauswahl.',
+          'Click Export/Email icon to export/email in HTML, EXCEL or CSV format':
+              ' Klicken Sie auf das Export-/E-Mail-Symbol, um im HTML-, EXCEL- oder CSV-Format zu exportieren/zu versenden.',
+          'Click Calendar icon to view in calendar mode':
+              'Klicken Sie auf das Kalendersymbol, um den Kalendermodus anzuzeigen.',
+          'Add Hour/Flat Rate Time Record':
+              "Stunden-/Pauschalpreis-Zeiterfassung hinzufügen",
+          'Notes': 'Anmerkungen',
+          'Status': 'Status',
+          'Add Mileage': 'Kilometer hinzufügen',
+          "Status": "Status",
+          "Open": "Offen",
+          "Billable": "Abrechenbar",
+          "Add Expense / Deduction": "Ausgabe / Abzug hinzufügen",
+          "Add Mileage": "Kilometerstand hinzufügen",
+          "Time in": "Anfangszeit",
+          "Time out": "Endzeit",
+          "Break": "Pause",
+          "Minutes": "Minuten",
+          "Working hours": "Arbeitsstunden",
+          "Hourly Rate": "Stundenlohn",
+          "Amount": "Betrag",
+          "Description": "Beschreibung",
+          "Paid Leave": "Bezahlter Urlaub",
+          "Default Client": "Standardkunde",
         },
       };
 }

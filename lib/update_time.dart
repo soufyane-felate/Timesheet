@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class UpdateTime extends StatefulWidget {
@@ -70,7 +71,7 @@ class _UpdateTimeState extends State<UpdateTime> {
         backgroundColor: Colors.grey,
         appBar: AppBar(
           title: Text(
-            "Update Time",
+            "Update Time".tr,
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.black,
@@ -97,7 +98,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(left: 50),
                           child: Center(
                             child: Text(
-                              "Project",
+                              "Project".tr,
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -132,7 +133,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(left: 50),
                           child: Center(
                             child: Text(
-                              "Client",
+                              "Client".tr,
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -147,7 +148,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 15, left: 5),
                           child: Text(
-                            "who do you work for?",
+                            "who do you work for?".tr,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey),
@@ -169,7 +170,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(left: 50),
                           child: Center(
                             child: Text(
-                              "Time in",
+                              "Time in".tr,
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -251,7 +252,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(left: 50),
                           child: Center(
                             child: Text(
-                              "Time out",
+                              "Time out".tr,
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -333,7 +334,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(left: 50),
                           child: Center(
                             child: Text(
-                              "Break",
+                              "Break".tr,
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -354,7 +355,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                                   RegExp(r'^[0-9]+$'))
                             ],
                             decoration: InputDecoration(
-                              hintText: "Minutes",
+                              hintText: "Minutes".tr,
                             ),
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
@@ -375,7 +376,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(left: 30),
                           child: Center(
                               child: Text(
-                            "Working hours",
+                            "Working hours".tr,
                             style: TextStyle(fontWeight: FontWeight.w500),
                           )),
                         ),
@@ -425,7 +426,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(left: 30),
                           child: Center(
                               child: Text(
-                            "Hourly Rate",
+                            "Hourly Rate".tr,
                             style: TextStyle(fontWeight: FontWeight.w500),
                           )),
                         ),
@@ -445,7 +446,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                                   RegExp(r'^[0-9]+$'))
                             ],
                             decoration: InputDecoration(
-                              hintText: "Amount",
+                              hintText: "Amount".tr,
                             ),
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
@@ -466,7 +467,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(left: 50),
                           child: Center(
                             child: Text(
-                              "Description",
+                              "Description".tr,
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -482,7 +483,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(bottom: 10, left: 5),
                           child: TextField(
                             decoration: InputDecoration(
-                              hintText: "what task have you done?",
+                              hintText: "what task have you done?".tr,
                             ),
                             style: TextStyle(fontWeight: FontWeight.w500),
                           ),
@@ -510,7 +511,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(left: 50),
                           child: Center(
                             child: Text(
-                              "Notes",
+                              "Notes".tr,
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -547,7 +548,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(left: 50),
                           child: Center(
                             child: Text(
-                              "Status",
+                              "Status".tr,
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -560,7 +561,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                         height: 50,
                         color: Colors.white,
                         child: Text(
-                          "Open",
+                          "Open".tr,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         ),
@@ -580,7 +581,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(left: 50),
                           child: Center(
                             child: Text(
-                              "Billable",
+                              "Billable".tr,
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -606,13 +607,13 @@ class _UpdateTimeState extends State<UpdateTime> {
                   minWidth: double.infinity,
                   color: Color.fromARGB(255, 221, 221, 223),
                   onPressed: () {},
-                  child: Text("Add Expense /  Deduction"),
+                  child: Text("Add Expense /  Deduction".tr),
                 ),
                 MaterialButton(
                   minWidth: double.infinity,
                   color: Color.fromARGB(255, 221, 221, 223),
                   onPressed: () {},
-                  child: Text("Add Mileage"),
+                  child: Text("Add Mileage".tr),
                 ),
               ],
             ),
