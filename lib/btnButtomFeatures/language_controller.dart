@@ -84,6 +84,11 @@ class LanguageController extends Translations {
           'default_client': 'Default Client',
         },
         'ar': {
+          'update_time': 'تحديث الوقت',
+          'project': 'المشروع',
+          "who do you work for?": 'لمن تعمل؟',
+          'client': 'العميل',
+          'what task have you done?': 'ما المهمة التي قمت بها؟',
           "language": "اللغة",
           "Help": "مساعدة",
           "Theme": "موضوع",
@@ -245,6 +250,11 @@ class LanguageController extends Translations {
           "project": "Projet",
           "client": "Client",
           "day": "Jour",
+          'update_time': 'Mettre à jour le temps',
+          'project': 'Projet',
+          "who do you work for?": 'Pour qui travaillez-vous ?',
+          'client': 'Client',
+          'what task have you done?': 'Quelle tâche avez-vous effectuée ?',
           "month": "Mois",
           "statistics": "Statistiques",
           "invoice": "Facture",
@@ -345,6 +355,7 @@ class LanguageController extends Translations {
           'The new time record will be Hour/Flat Rate based on the project setting':
               'Le nouveau relevé de temps sera basé sur le tarif horaire ou forfaitaire en fonction des paramètres du projet.',
           'Notes': 'Remarques',
+          // ignore: equal_keys_in_map
           'In project setting, you can choose Hour/Flat Rate':
               ' Dans les paramètres du projet, vous pouvez choisir entre le tarif horaire ou forfaitaire.',
           'Click Title to change period':
@@ -382,6 +393,11 @@ class LanguageController extends Translations {
           "Default Client": "Client par défaut",
         },
         'de': {
+          'update_time': 'Zeit aktualisieren',
+          'project': 'Projekt',
+          "who do you work for?": 'Für wen arbeitest du?',
+          'client': 'Kunde',
+          'what task have you done?': 'Welche Aufgabe hast du erledigt?',
           "language": "Sprache",
           "Help": "Hilfe",
           "Theme": "Thema",
@@ -517,10 +533,12 @@ class LanguageController extends Translations {
           'Notes': 'Anmerkungen',
           'Status': 'Status',
           'Add Mileage': 'Kilometer hinzufügen',
+          // ignore: equal_keys_in_map
           "Status": "Status",
           "Open": "Offen",
           "Billable": "Abrechenbar",
           "Add Expense / Deduction": "Ausgabe / Abzug hinzufügen",
+          // ignore: equal_keys_in_map
           "Add Mileage": "Kilometerstand hinzufügen",
           "Time in": "Anfangszeit",
           "Time out": "Endzeit",

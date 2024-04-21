@@ -71,7 +71,7 @@ class _UpdateTimeState extends State<UpdateTime> {
         backgroundColor: Colors.grey,
         appBar: AppBar(
           title: Text(
-            "Update Time".tr,
+            'update_time'.tr,
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.black,
@@ -98,7 +98,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(left: 50),
                           child: Center(
                             child: Text(
-                              "Project".tr,
+                              'project'.tr,
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -133,7 +133,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(left: 50),
                           child: Center(
                             child: Text(
-                              "Client".tr,
+                              'client'.tr,
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -607,7 +607,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                   minWidth: double.infinity,
                   color: Color.fromARGB(255, 221, 221, 223),
                   onPressed: () {},
-                  child: Text("Add Expense /  Deduction".tr),
+                  child: Text("Add Expense / Deduction".tr),
                 ),
                 MaterialButton(
                   minWidth: double.infinity,

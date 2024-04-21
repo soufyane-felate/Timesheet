@@ -2,13 +2,20 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:timesheet_1/btnButtomFeatures/settings.dart';
 import 'package:timesheet_1/calendar_page.dart';
 import 'package:timesheet_1/help.dart';
 import 'package:timesheet_1/update_time.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+class DropdownItem {
+  final String displayText;
+  final String value;
+
+  DropdownItem(this.displayText, this.value);
+}
 
 class Second extends StatefulWidget {
   const Second({Key? key}) : super(key: key);
@@ -44,36 +51,41 @@ class _SecondState extends State<Second> {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  void _showNotification(String title, String body) async {
-    String elapsedTime = TimerUtil.formatTime(_stopwatch.elapsedMilliseconds);
-    body = '$body\nElapsed Time: $elapsedTime';
-
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      '1',
-      'Timesheet App',
-      importance: Importance.max,
-      priority: Priority.high,
-      ticker: 'ticker',
-      enableVibration: false,
-      playSound: false,
-    );
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      title,
-      body,
-      platformChannelSpecifics,
-    );
-  }
-
   void _updateTime(Timer timer) {
     if (_isRunning) {
-      _showNotification('Stopwatch Running', 'Elapsed Time:');
+      String elapsedTime = TimerUtil.formatTime(_stopwatch.elapsedMilliseconds);
+      _showNotification('Stopwatch Running', 'Elapsed Time: $elapsedTime');
       setState(() {});
     }
   }
+
+ void _showNotification(String title, String body) async {
+  String elapsedTime = TimerUtil.formatTime(_stopwatch.elapsedMilliseconds);
+  body = '$body\nElapsed Time: $elapsedTime';
+
+  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+    '1',
+    'Timesheet App',
+    importance: Importance.max,
+    priority: Priority.high,
+    ticker: 'ticker',
+    enableVibration: false,
+    playSound: false,
+  );
+
+  const NotificationDetails platformChannelSpecifics =
+      NotificationDetails(android: androidPlatformChannelSpecifics);
+
+  await flutterLocalNotificationsPlugin.show(
+    0,
+    title,
+    body,
+    platformChannelSpecifics,
+  );
+}
+
+
 
   @override
   void dispose() {
@@ -130,45 +142,44 @@ class _SecondState extends State<Second> {
   }
 
   Widget _buildDropdown(String label) {
-  List<String> items = [];
-  String? selectedValue;
+    List<DropdownItem> items = [];
+    String? selectedValue;
 
-  if (label == 'project'.tr) {
-    items = [
-      'hourly_rate'.tr,
-      'flat_rate'.tr,
-      'overtime'.tr,
-      'night_shift'.tr,
-      'holiday'.tr,
-      'unpaid_leave'.tr,
-    ];
-    selectedValue = _selectedProject;
-  } else if (label == 'client'.tr) {
-    items = ['default_client'.tr];
-    selectedValue = _selectedClient;
+    if (label == 'project'.tr) {
+      items = [
+        DropdownItem('Hourly Rate', 'hourly_rate'),
+        DropdownItem('Flat Rate', 'flat_rate'),
+        DropdownItem('Overtime', 'overtime'),
+        DropdownItem('Night Shift', 'night_shift'),
+        DropdownItem('Holiday', 'holiday'),
+        DropdownItem('Unpaid Leave', 'unpaid_leave'),
+      ];
+      selectedValue = _selectedProject;
+    } else if (label == 'client'.tr) {
+      items = [DropdownItem('Default Client', 'default_client')];
+      selectedValue = _selectedClient;
+    }
+
+    return DropdownButton<String>(
+      value: selectedValue,
+      items: items.map((DropdownItem item) {
+        return DropdownMenuItem<String>(
+          value: item.value,
+          child: Text(item.displayText),
+        );
+      }).toList(),
+      hint: Text(label),
+      onChanged: (String? value) {
+        setState(() {
+          if (label == 'project'.tr) {
+            _selectedProject = value;
+          } else if (label == 'client'.tr) {
+            _selectedClient = value;
+          }
+        });
+      },
+    );
   }
-
-  return DropdownButton<String>(
-    value: selectedValue,
-    items: items.map((String value) {
-      return DropdownMenuItem<String>(
-        value: value,
-        child: Text(value),
-      );
-    }).toList(),
-    hint: Text(label),
-    onChanged: (String? value) {
-      setState(() {
-        if (label == 'project'.tr) {
-          _selectedProject = value;
-        } else if (label == 'client'.tr) {
-          _selectedClient = value;
-        }
-      });
-    },
-  );
-}
-
 
   Widget _buildCounter(String label, String value) {
     return Column(
