@@ -615,6 +615,37 @@ class _UpdateTimeState extends State<UpdateTime> {
                   onPressed: () {},
                   child: Text("Add Mileage".tr),
                 ),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: MaterialButton(
+                        minWidth: double.infinity,
+                        color: Color.fromARGB(255, 221, 221, 223),
+                        onPressed: () {},
+                        child: Text("Delete ".tr),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: MaterialButton(
+                        minWidth: double.infinity,
+                        color: Color.fromARGB(255, 221, 221, 223),
+                        onPressed: () {},
+                        child: Text("Update ".tr),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: MaterialButton(
+                        minWidth: double.infinity,
+                        color: Color.fromARGB(255, 221, 221, 223),
+                        onPressed: () {},
+                        child: Text("Add ".tr),
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           ),

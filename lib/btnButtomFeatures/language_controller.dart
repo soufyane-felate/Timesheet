@@ -1,3 +1,5 @@
+// ignore_for_file: equal_keys_in_map
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -355,7 +357,6 @@ class LanguageController extends Translations {
           'The new time record will be Hour/Flat Rate based on the project setting':
               'Le nouveau relevé de temps sera basé sur le tarif horaire ou forfaitaire en fonction des paramètres du projet.',
           'Notes': 'Remarques',
-          // ignore: equal_keys_in_map
           'In project setting, you can choose Hour/Flat Rate':
               ' Dans les paramètres du projet, vous pouvez choisir entre le tarif horaire ou forfaitaire.',
           'Click Title to change period':
@@ -533,12 +534,10 @@ class LanguageController extends Translations {
           'Notes': 'Anmerkungen',
           'Status': 'Status',
           'Add Mileage': 'Kilometer hinzufügen',
-          // ignore: equal_keys_in_map
           "Status": "Status",
           "Open": "Offen",
           "Billable": "Abrechenbar",
           "Add Expense / Deduction": "Ausgabe / Abzug hinzufügen",
-          // ignore: equal_keys_in_map
           "Add Mileage": "Kilometerstand hinzufügen",
           "Time in": "Anfangszeit",
           "Time out": "Endzeit",
