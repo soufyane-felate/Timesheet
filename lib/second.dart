@@ -1,17 +1,16 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:timesheet_1/btnButtomFeatures/settings.dart';
+import 'package:timesheet_1/btnButtomFeatures/time/time.dart';
 import 'package:timesheet_1/calendar_page.dart';
 import 'package:timesheet_1/help.dart';
 import 'package:timesheet_1/update_time.dart';
-import 'package:intl/intl.dart'; // Import the package responsible for formatting dates
+import 'package:intl/intl.dart';
 
 class DropdownItem {
   final String displayText;
@@ -188,7 +187,7 @@ class _SecondState extends State<Second> {
         Text(value, style: TextStyle(fontSize: 18)),
         SizedBox(
             height: MediaQuery.of(context).size.height *
-                0.01), // Adjust spacing between items using MediaQuery
+                0.01), 
         Text(label),
       ],
     );
@@ -256,19 +255,19 @@ class _SecondState extends State<Second> {
                   ),
                   child: Padding(
                     padding: EdgeInsets.all(
-                      isLargeScreen ? 120 : 70, // زيادة حجم padding
+                      isLargeScreen ? 100 : 45, 
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Padding(
                           padding:
-                              EdgeInsets.only(right: isLargeScreen ? 130 : 0),
+                              EdgeInsets.only(right: isLargeScreen ? 100 : 0),
                           child: Text(
                             currentDate,
                             style: const TextStyle(
                               backgroundColor: Colors.grey,
-                              fontSize: 18, // زيادة حجم النص
+                              fontSize: 18, 
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -277,7 +276,7 @@ class _SecondState extends State<Second> {
                         Text(
                           formattedTime,
                           style: TextStyle(
-                            fontSize: isLargeScreen ? 78 : 48, // زيادة حجم النص
+                            fontSize: isLargeScreen ? 78 : 48, 
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -293,7 +292,7 @@ class _SecondState extends State<Second> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
-                        flex: 1, // تحديد نسبة العرض للزر
+                        flex: 1,
                         child: Container(
                           margin: EdgeInsets.all(8),
                           child: ElevatedButton(
@@ -311,7 +310,7 @@ class _SecondState extends State<Second> {
                         ),
                       ),
                       Expanded(
-                        flex: 1, // تحديد نسبة العرض للزر
+                        flex: 1,
                         child: Container(
                           margin: EdgeInsets.all(8),
                           child: ElevatedButton(
@@ -392,7 +391,18 @@ class _SecondState extends State<Second> {
                     color: const Color.fromARGB(255, 3, 35, 61),
                   ),
                   backgroundColor: Color.fromARGB(255, 7, 230, 238),
-                  onPressed: () {},
+                  onPressed: () {
+                    {
+                      setState(() {});
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Time(
+                                  selectedProject: '',
+                                )),
+                      );
+                    }
+                  },
                 ),
                 GButton(
                   icon: Icons.bar_chart,

@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:timesheet_1/btnButtomFeatures/time/time.dart';
+import 'package:http/http.dart' as http;
+import 'package:timesheet_1/second.dart';
+import 'dart:convert';
+
+import 'package:timesheet_1/selectClient.dart';
 
 class UpdateTime extends StatefulWidget {
-  final String? selectedProject;
+  String? selectedProject;
+  String? selectedClientName;
 
-  UpdateTime({this.selectedProject});
+  UpdateTime({this.selectedProject, this.selectedClientName});
 
   @override
   _UpdateTimeState createState() => _UpdateTimeState();
@@ -53,8 +60,50 @@ class _UpdateTimeState extends State<UpdateTime> {
     return '${(minutes ~/ 60).toString().padLeft(2, '0')}:${(minutes % 60).toString().padLeft(2, '0')}';
   }
 
+  final TextEditingController _breakController = TextEditingController();
+  final TextEditingController _hourlyRateController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _notesController = TextEditingController();
+
+  Future<void> saveDataToAPI() async {
+    var url = 'http://127.0.0.1:8000/update-time';
+    try {
+      var data = {
+        'selectedProject': widget.selectedProject ?? "",
+        'client': widget.selectedClientName,
+        'timeIn': _getCurrentTime(),
+        'timeOut': _getCurrentTime2(),
+        'break': _breakController.text,
+        'workingHours': _getWorkingHours(),
+        'hourlyRate': _hourlyRateController.text,
+        'description': _descriptionController.text,
+        'notes': _notesController.text,
+        'status': status.toString(),
+        'billable': status ? 'true' : 'false',
+      };
+
+      var response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print(' Data saved successfully from flutter');
+      } else {
+        print('failed saved from flutter ${response.reasonPhrase}');
+      }
+    } catch (error) {
+      print('-----error----: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    String? selectedValue;
+
     Widget size() {
       return SizedBox(
         height: 0,
@@ -78,7 +127,10 @@ class _UpdateTimeState extends State<UpdateTime> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Second()),
+              );
             },
           ),
         ),
@@ -106,6 +158,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                       ),
                     ),
                     Expanded(
+                      //
                       flex: 2,
                       child: Container(
                         height: 50,
@@ -142,17 +195,26 @@ class _UpdateTimeState extends State<UpdateTime> {
                     ),
                     Expanded(
                       flex: 2,
-                      child: Container(
-                        height: 50,
-                        color: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 15, left: 5),
-                          child: Text(
-                            "who do you work for?".tr,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey),
-                          ),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => selectClient()),
+                          );
+                        },
+                        child: Container(
+                          height: 50,
+                          color: Colors.white,
+                          child: Padding(
+                              padding: const EdgeInsets.only(top: 15, left: 5),
+                              child: Text(
+                                widget.selectedClientName ?? "",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey,
+                                ),
+                              )),
                         ),
                       ),
                     ),
@@ -581,6 +643,39 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(left: 50),
                           child: Center(
                             child: Text(
+                              "Tag".tr,
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        height: 50,
+                        color: Colors.white,
+                        child: Text(
+                          "".tr,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                size(),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        height: 50,
+                        color: Color.fromARGB(255, 221, 221, 223),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 50),
+                          child: Center(
+                            child: Text(
                               "Billable".tr,
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
@@ -631,8 +726,10 @@ class _UpdateTimeState extends State<UpdateTime> {
                       child: MaterialButton(
                         minWidth: double.infinity,
                         color: Color.fromARGB(255, 221, 221, 223),
-                        onPressed: () {},
-                        child: Text("Update ".tr),
+                        onPressed: () {
+                          saveDataToAPI();
+                        },
+                        child: Text("save ".tr),
                       ),
                     ),
                     Expanded(
@@ -641,7 +738,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                         minWidth: double.infinity,
                         color: Color.fromARGB(255, 221, 221, 223),
                         onPressed: () {},
-                        child: Text("Add ".tr),
+                        child: Text("copy ".tr),
                       ),
                     ),
                   ],
