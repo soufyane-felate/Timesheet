@@ -1,18 +1,15 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:timesheet_1/models/showModel.dart';
 
 class Time extends StatefulWidget {
-  final String? selectedProject;
-  final void Function(String)?
-      onProjectAdded; // Function to handle project addition
-
-  Time({required this.selectedProject, this.onProjectAdded});
-
   @override
   _TimeState createState() => _TimeState();
 }
 
 class _TimeState extends State<Time> {
-  String dropdownValue = 'year'; // Initialize dropdown value to 'year'
+  String dropdownValue = 'year';
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
   List<String> daysOfWeek = [
@@ -25,14 +22,35 @@ class _TimeState extends State<Time> {
     'Sunday'
   ];
 
-  List<String> selectedProjects = []; // List to store selected projects
+  List<String> selectedProjects = [];
+
+  Future<ShowModel> fetchProjects() async {
+    try {
+      final response =
+          await http.get(Uri.parse('http://192.168.1.10:8000/api/time_show'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return ShowModel.fromJson(data['data']);
+      } else {
+        throw Exception(
+            'Failed to load projects. Server responded with status code ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Failed to load projects: $error');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    if (widget.selectedProject != null) {
-      selectedProjects.add(widget.selectedProject!);
-    }
+    fetchProjects().then((value) {
+      setState(() {
+        selectedProjects = value.selectedProject as List<String>;
+        selectedProjects = value.client as List<String>;
+      });
+    }).catchError((error) {
+      print('Error fetching projects: $error');
+    });
   }
 
   @override
@@ -41,15 +59,21 @@ class _TimeState extends State<Time> {
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.amber,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back,
+                color: const Color.fromARGB(255, 0, 0, 0)),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
           title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 15,
-              ),
-              Text("Time", style: TextStyle(color: Colors.indigo)),
+              SizedBox(height: 15),
+              SizedBox(height: 10),
               DropdownButton<String>(
                 value: dropdownValue,
-                items: [
+                items: const [
                   DropdownMenuItem(child: Text('Year'), value: 'year'),
                   DropdownMenuItem(child: Text('Month'), value: 'month'),
                   DropdownMenuItem(
@@ -63,10 +87,6 @@ class _TimeState extends State<Time> {
                 onChanged: (String? value) {
                   setState(() {
                     dropdownValue = value!;
-                    SizedBox(
-                      height: 10,
-                    );
-
                     if (value == 'year') {
                       startDate = DateTime(DateTime.now().year, 1, 1);
                       endDate = DateTime(DateTime.now().year, 12, 31);
@@ -87,17 +107,9 @@ class _TimeState extends State<Time> {
                         endDate = DateTime(
                             DateTime.now().year, DateTime.now().month + 1, 0);
                       }
-                    } else if (value == 'quarter-week') {
-                      int daysUntilNextMonday = 8 - DateTime.now().weekday;
-                      startDate = DateTime.now()
-                          .subtract(Duration(days: daysUntilNextMonday - 1));
-                      endDate = startDate.add(Duration(days: 6));
-                    } else if (value == 'bi-week') {
-                      int daysUntilNextMonday = 8 - DateTime.now().weekday;
-                      startDate = DateTime.now()
-                          .subtract(Duration(days: daysUntilNextMonday - 1));
-                      endDate = startDate.add(Duration(days: 13));
-                    } else if (value == 'week') {
+                    } else if (value == 'quarter-week' ||
+                        value == 'bi-week' ||
+                        value == 'week') {
                       int daysUntilNextMonday = 8 - DateTime.now().weekday;
                       startDate = DateTime.now()
                           .subtract(Duration(days: daysUntilNextMonday - 1));
@@ -141,7 +153,7 @@ class _TimeState extends State<Time> {
                 itemCount: selectedProjects.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text("Selected Project: ${selectedProjects[index]}"),
+                    title: Text(selectedProjects[index]),
                   );
                 },
               )
@@ -151,8 +163,4 @@ class _TimeState extends State<Time> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(Time(selectedProject: "Your selected project"));
 }

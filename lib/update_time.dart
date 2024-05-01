@@ -1,17 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:timesheet_1/api/api.dart';
 import 'package:timesheet_1/btnButtomFeatures/time/time.dart';
-import 'package:http/http.dart' as http;
-import 'package:timesheet_1/second.dart';
-import 'dart:convert';
-
-import 'package:timesheet_1/selectClient.dart';
 
 class UpdateTime extends StatefulWidget {
-  String? selectedProject;
-  String? selectedClientName;
+  final String? selectedProject;
+  final String? selectedClientName;
 
   UpdateTime({this.selectedProject, this.selectedClientName});
 
@@ -20,7 +18,7 @@ class UpdateTime extends StatefulWidget {
 }
 
 class _UpdateTimeState extends State<UpdateTime> {
-  bool status = false;
+  bool status1 = false;
   DateTime selectedDate = DateTime.now();
   DateTime selectedDate2 = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
@@ -64,39 +62,69 @@ class _UpdateTimeState extends State<UpdateTime> {
   final TextEditingController _hourlyRateController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
+  final TextEditingController _statusController = TextEditingController();
+  final TextEditingController _tagsController = TextEditingController();
+  List<String> _statusOptions = ["open", "follow up", "Invoiced", "Paid"];
+  String _selectedStatus = "open";
+  String _selectedTags = "Company";
+  List<String> _tagsOptions = [
+    "Company",
+    "follow up",
+    "In process",
+    "Personal"
+  ];
 
-  Future<void> saveDataToAPI() async {
-    var url = 'http://127.0.0.1:8000/update-time';
+  @override
+  void dispose() {
+    _breakController.dispose();
+    _hourlyRateController.dispose();
+    _descriptionController.dispose();
+    _notesController.dispose();
+    _statusController.dispose();
+    _tagsController.dispose();
+    super.dispose();
+  }
+
+  void _saveApi() async {
     try {
       var data = {
-        'selectedProject': widget.selectedProject ?? "",
+        'selectedProject': widget.selectedProject!,
         'client': widget.selectedClientName,
-        'timeIn': _getCurrentTime(),
-        'timeOut': _getCurrentTime2(),
-        'break': _breakController.text,
+        'timeIn': _getCurrentDate() + ' ' + _getCurrentTime(),
+        'timeOut': _getCurrentTime2() + ' ' + _getCurrentTime2(),
+        'timebreak': _breakController.text,
         'workingHours': _getWorkingHours(),
         'hourlyRate': _hourlyRateController.text,
         'description': _descriptionController.text,
         'notes': _notesController.text,
-        'status': status.toString(),
-        'billable': status ? 'true' : 'false',
+        'status': _selectedStatus,
+        'tags': _selectedTags,
+        'billable': status1 ?? 'true'
       };
 
-      var response = await http.post(
-        Uri.parse(url),
-        body: jsonEncode(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      );
+      var res = await CallApi().postData(data);
 
-      if (response.statusCode == 200) {
-        print(' Data saved successfully from flutter');
+      var body = json.decode(res.body);
+      if (res.statusCode == 200 && body['success']) {
+        print('success');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Data saved successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
       } else {
-        print('failed saved from flutter ${response.reasonPhrase}');
+        throw 'Failed to save data: ${body['message']}';
       }
     } catch (error) {
-      print('-----error----: $error');
+      print("Error: $error");
+
+      /*  ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $error'),
+          backgroundColor: Colors.red,
+        ),
+      );*/
     }
   }
 
@@ -127,10 +155,7 @@ class _UpdateTimeState extends State<UpdateTime> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Second()),
-              );
+              Navigator.of(context).pop();
             },
           ),
         ),
@@ -158,7 +183,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                       ),
                     ),
                     Expanded(
-                      //
+                      // Expanded 1
                       flex: 2,
                       child: Container(
                         height: 50,
@@ -194,27 +219,19 @@ class _UpdateTimeState extends State<UpdateTime> {
                       ),
                     ),
                     Expanded(
+                      // Expanded
                       flex: 2,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => selectClient()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          color: Colors.white,
-                          child: Padding(
-                              padding: const EdgeInsets.only(top: 15, left: 5),
-                              child: Text(
-                                widget.selectedClientName ?? "",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey,
-                                ),
-                              )),
+                      child: Container(
+                        height: 50,
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 15, left: 5),
+                          child: Text(
+                            widget.selectedClientName ?? '',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
+                          ),
                         ),
                       ),
                     ),
@@ -414,16 +431,18 @@ class _UpdateTimeState extends State<UpdateTime> {
                             keyboardType: TextInputType.number,
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(
-                                  RegExp(r'^[0-9]+$'))
+                                RegExp(r'^[0-9]+$'),
+                              ),
                             ],
                             decoration: InputDecoration(
                               hintText: "Minutes".tr,
                             ),
                             style: TextStyle(fontWeight: FontWeight.bold),
+                            controller: _breakController,
                           ),
                         ),
                       ),
-                    ),
+                    )
                   ],
                 ),
                 size(),
@@ -511,6 +530,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                               hintText: "Amount".tr,
                             ),
                             style: TextStyle(fontWeight: FontWeight.bold),
+                            controller: _hourlyRateController,
                           ),
                         ),
                       ),
@@ -548,6 +568,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                               hintText: "what task have you done?".tr,
                             ),
                             style: TextStyle(fontWeight: FontWeight.w500),
+                            controller: _descriptionController,
                           ),
                         ),
                       ),
@@ -592,6 +613,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                               hintText: "",
                             ),
                             style: TextStyle(fontWeight: FontWeight.w500),
+                            controller: _notesController,
                           ),
                         ),
                       ),
@@ -610,7 +632,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(left: 50),
                           child: Center(
                             child: Text(
-                              "Status".tr,
+                              "Status",
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -619,13 +641,24 @@ class _UpdateTimeState extends State<UpdateTime> {
                     ),
                     Expanded(
                       flex: 2,
-                      child: Container(
-                        height: 50,
-                        color: Colors.white,
-                        child: Text(
-                          "Open".tr,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
+                      child: GestureDetector(
+                        onTap: () {
+                          _showStatusDialog(context);
+                        },
+                        child: Container(
+                          height: 50,
+                          color: Colors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 10, left: 5),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: "open",
+                              ),
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                              controller: _statusController,
+                              enabled: false,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -643,7 +676,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                           padding: const EdgeInsets.only(left: 50),
                           child: Center(
                             child: Text(
-                              "Tag".tr,
+                              "Tags",
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -652,13 +685,24 @@ class _UpdateTimeState extends State<UpdateTime> {
                     ),
                     Expanded(
                       flex: 2,
-                      child: Container(
-                        height: 50,
-                        color: Colors.white,
-                        child: Text(
-                          "".tr,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
+                      child: GestureDetector(
+                        onTap: () {
+                          _showTagDialog(context);
+                        },
+                        child: Container(
+                          height: 50,
+                          color: Colors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 10, left: 5),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: "Company",
+                              ),
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                              controller: _tagsController,
+                              enabled: false,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -671,7 +715,6 @@ class _UpdateTimeState extends State<UpdateTime> {
                       flex: 1,
                       child: Container(
                         height: 50,
-                        color: Color.fromARGB(255, 221, 221, 223),
                         child: Padding(
                           padding: const EdgeInsets.only(left: 50),
                           child: Center(
@@ -688,11 +731,11 @@ class _UpdateTimeState extends State<UpdateTime> {
                         child: Container(
                           color: Colors.white,
                           child: Switch(
-                              value: status,
+                              value: status1,
                               onChanged: (val) {
                                 print("object");
                                 setState(() {
-                                  status = val;
+                                  status1 = val;
                                 });
                               }),
                         )),
@@ -727,7 +770,7 @@ class _UpdateTimeState extends State<UpdateTime> {
                         minWidth: double.infinity,
                         color: Color.fromARGB(255, 221, 221, 223),
                         onPressed: () {
-                          saveDataToAPI();
+                          _saveApi();
                         },
                         child: Text("save ".tr),
                       ),
@@ -750,6 +793,58 @@ class _UpdateTimeState extends State<UpdateTime> {
       ),
     );
   }
-}
 
-void main() => runApp(UpdateTime());
+  void _showStatusDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Select Status"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: _statusOptions
+                .map((status) => ListTile(
+                      title: Text(status),
+                      onTap: () {
+                        setState(() {
+                          _selectedStatus = status;
+                          _statusController.text = status;
+                        });
+                        Navigator.of(context).pop();
+                      },
+                    ))
+                .toList(),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showTagDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Select Tags"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: _tagsOptions
+                .map((tag) => ListTile(
+                      title: Text(tag),
+                      onTap: () {
+                        setState(() {
+                          _selectedTags = tag;
+                          _tagsController.text = tag;
+                        });
+                        Navigator.of(context).pop();
+                      },
+                    ))
+                .toList(),
+          ),
+        );
+      },
+    );
+  }
+
+  void main() => runApp(UpdateTime());
+}

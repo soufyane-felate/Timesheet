@@ -129,7 +129,7 @@ class _SecondState extends State<Second> {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        UpdateTime(selectedProject: _selectedProject),
+                        UpdateTime(selectedProject: _selectedProject,selectedClientName:_selectedClient),
                   ),
                 );
               },
@@ -398,7 +398,7 @@ class _SecondState extends State<Second> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => Time(
-                                  selectedProject: '',
+                                
                                 )),
                       );
                     }
