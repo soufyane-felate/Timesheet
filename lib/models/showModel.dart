@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class ShowModel {
   final String selectedProject;
   final String client;
@@ -26,21 +28,27 @@ class ShowModel {
     required this.timebreak,
     required this.billable,
   });
-
   factory ShowModel.fromJson(Map<String, dynamic> json) {
     return ShowModel(
       selectedProject: json['selectedProject'],
       client: json['client'],
-      tags: List<String>.from(json['tags']),
+      tags: json['tags'] is List
+          ? List<String>.from(json['tags'])
+          : [json['tags'].toString()],
       timeOut: json['timeOut'],
       timeIn: json['timeIn'],
       status: json['status'],
       notes: json['notes'],
-      description: json['description'],
-      hourlyRate: json['hourlyRate'].toDouble(),
-      workingHours: json['workingHours'],
+      description: json['description'] ?? "",
+      hourlyRate: json['hourlyRate'] != null
+          ? double.tryParse(json['hourlyRate'].toString()) ?? 0.0
+          : 0.0,
+      workingHours: json['workingHours'] != null
+          ? int.tryParse(json['workingHours'].toString()) ?? 0
+          : 0,
       timebreak: json['timebreak'],
-      billable: json['billable'],
+      billable:
+          json['billable'] is bool ? json['billable'] : json['billable'] == 1,
     );
   }
 }

@@ -128,8 +128,9 @@ class _SecondState extends State<Second> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        UpdateTime(selectedProject: _selectedProject,selectedClientName:_selectedClient),
+                    builder: (context) => UpdateTime(
+                        selectedProject: _selectedProject,
+                        selectedClientName: _selectedClient),
                   ),
                 );
               },
@@ -185,9 +186,7 @@ class _SecondState extends State<Second> {
     return Column(
       children: [
         Text(value, style: TextStyle(fontSize: 18)),
-        SizedBox(
-            height: MediaQuery.of(context).size.height *
-                0.01), 
+        SizedBox(height: MediaQuery.of(context).size.height * 0.01),
         Text(label),
       ],
     );
@@ -247,7 +246,7 @@ class _SecondState extends State<Second> {
             Column(
               children: [
                 Card(
-                  margin: EdgeInsets.all(8),
+                  margin: EdgeInsets.all(10),
                   color: const Color.fromARGB(255, 29, 29, 28),
                   elevation: 4,
                   shape: RoundedRectangleBorder(
@@ -255,19 +254,19 @@ class _SecondState extends State<Second> {
                   ),
                   child: Padding(
                     padding: EdgeInsets.all(
-                      isLargeScreen ? 100 : 45, 
+                      isLargeScreen ? 150 : 68,
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Padding(
                           padding:
-                              EdgeInsets.only(right: isLargeScreen ? 100 : 0),
+                              EdgeInsets.only(right: isLargeScreen ? 120 : 10),
                           child: Text(
                             currentDate,
                             style: const TextStyle(
                               backgroundColor: Colors.grey,
-                              fontSize: 18, 
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
@@ -276,7 +275,7 @@ class _SecondState extends State<Second> {
                         Text(
                           formattedTime,
                           style: TextStyle(
-                            fontSize: isLargeScreen ? 78 : 48, 
+                            fontSize: isLargeScreen ? 78 : 65,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -287,7 +286,7 @@ class _SecondState extends State<Second> {
                 ),
                 SizedBox(height: isLargeScreen ? 40 : 20),
                 Padding(
-                  padding: EdgeInsets.all(isLargeScreen ? 40 : 20),
+                  padding: EdgeInsets.all(isLargeScreen ? 50 : 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -396,10 +395,7 @@ class _SecondState extends State<Second> {
                       setState(() {});
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => Time(
-                                
-                                )),
+                        MaterialPageRoute(builder: (context) => Time()),
                       );
                     }
                   },
