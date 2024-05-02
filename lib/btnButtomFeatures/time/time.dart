@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:timesheet_1/models/showModel.dart';
+import 'package:timesheet_1/second.dart';
 import 'package:timesheet_1/update_time.dart';
 
 class Time extends StatefulWidget {
@@ -27,10 +27,12 @@ class _TimeState extends State<Time> {
   ];
 
   List<Color> colorList = [
-    Color.fromARGB(255, 139, 230, 236),
+    const Color.fromARGB(255, 139, 230, 236),
     const Color.fromARGB(255, 95, 155, 97),
     const Color.fromARGB(255, 255, 255, 255),
-    Color.fromARGB(255, 236, 226, 133)
+    const Color.fromARGB(255, 236, 226, 133),
+    const Color.fromARGB(255, 235, 70, 5),
+    const Color.fromARGB(255, 3, 98, 110)
   ];
 
   @override
@@ -54,26 +56,69 @@ class _TimeState extends State<Time> {
     }
   }
 
+  Future<void> deleteItem(int index) async {
+    int itemId = timeRecords[index].id;
+
+    setState(() {
+      timeRecords.removeAt(index);
+    });
+
+    final response = await http
+        .delete(Uri.parse('http://192.168.1.10:8000/api/time_delete/$itemId'));
+
+    if (response.statusCode == 200) {
+      print('Item deleted successfully');
+    } else {
+      print('Failed to delete item: ${response.statusCode}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 15, 15, 15),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Second()),
+            );
+          },
+        ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 15),
             DropdownButton<String>(
+              dropdownColor: Colors.black,
               value: dropdownValue,
               items: const [
-                DropdownMenuItem(child: Text('Year'), value: 'year'),
-                DropdownMenuItem(child: Text('Month'), value: 'month'),
                 DropdownMenuItem(
-                    child: Text('Semi-Month'), value: 'semi-month'),
+                    child: Text('Year', style: TextStyle(color: Colors.white)),
+                    value: 'year'),
                 DropdownMenuItem(
-                    child: Text('Quarter-Week'), value: 'quarter-week'),
-                DropdownMenuItem(child: Text('Bi-Week'), value: 'bi-week'),
-                DropdownMenuItem(child: Text('Week'), value: 'week'),
-                DropdownMenuItem(child: Text('Day'), value: 'day'),
+                    child: Text('Month', style: TextStyle(color: Colors.white)),
+                    value: 'month'),
+                DropdownMenuItem(
+                    child: Text('Semi-Month',
+                        style: TextStyle(color: Colors.white)),
+                    value: 'semi-month'),
+                DropdownMenuItem(
+                    child: Text('Quarter-Week',
+                        style: TextStyle(color: Colors.white)),
+                    value: 'quarter-week'),
+                DropdownMenuItem(
+                    child:
+                        Text('Bi-Week', style: TextStyle(color: Colors.white)),
+                    value: 'bi-week'),
+                DropdownMenuItem(
+                    child: Text('Week', style: TextStyle(color: Colors.white)),
+                    value: 'week'),
+                DropdownMenuItem(
+                    child: Text('Day', style: TextStyle(color: Colors.white)),
+                    value: 'day'),
               ],
               onChanged: (String? value) {
                 setState(() {
@@ -149,55 +194,67 @@ class _TimeState extends State<Time> {
                   final record = timeRecords[index];
                   final color = colorList[index % colorList.length];
 
-                  return Container(
-                    child: ListTile(
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 20,
-                                    height: 40,
-                                    color: color,
+                  return Dismissible(
+                    key: Key(record.id.toString()),
+                    onDismissed: (direction) {
+                      deleteItem(index);
+                    },
+                    background: Container(
+                      color: Colors.red,
+                      child: Icon(Icons.delete),
+                      alignment: Alignment.centerRight,
+                      padding: EdgeInsets.only(right: 20),
+                    ),
+                    child: Container(
+                      child: ListTile(
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 20,
+                                      height: 40,
+                                      color: color,
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  '${record.timeIn}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    height: 1.5,
                                   ),
-                                ],
-                              ),
-                              Text(
-                                '${record.timeIn}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  height: 1.5,
                                 ),
-                              ),
-                              Text(
-                                '${record.timeOut}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  height: 1.5,
+                                Text(
+                                  '${record.timeOut}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    height: 1.5,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                '${record.selectedProject} - ${record.client}',
-                              ),
-                              Text(
-                                '${record.timebreak} - ${record.workingHours}',
-                              ),
-                              Text('${record.description}'),
-                              Text('${record.notes} - ${record.tags}'),
-                            ],
-                          ),
-                          Divider(
-                            height: 2,
-                            color: Colors.black,
-                          )
-                        ],
+                                Text(
+                                  '${record.selectedProject} - ${record.client}',
+                                ),
+                                Text(
+                                  '${record.timebreak} - ${record.workingHours}',
+                                ),
+                                Text('${record.description}'),
+                                Text('${record.notes} - ${record.tags}'),
+                              ],
+                            ),
+                            Divider(
+                              height: 2,
+                              color: Colors.black,
+                            )
+                          ],
+                        ),
+                        // onTap: ...
                       ),
-                      // onTap: ...
                     ),
                   );
                 },

@@ -88,10 +88,10 @@ class _UpdateTimeState extends State<UpdateTime> {
   void _saveApi() async {
     try {
       var data = {
-        'selectedProject': widget.selectedProject!,
+        'selectedProject': widget.selectedProject,
         'client': widget.selectedClientName,
         'timeIn': _getCurrentDate() + ' ' + _getCurrentTime(),
-        'timeOut': _getCurrentTime2() + ' ' + _getCurrentTime2(),
+        'timeOut': _getCurrentDate2() + ' ' + _getCurrentTime2(),
         'timebreak': _breakController.text,
         'workingHours': _getWorkingHours(),
         'hourlyRate': _hourlyRateController.text,
@@ -113,8 +113,12 @@ class _UpdateTimeState extends State<UpdateTime> {
             backgroundColor: Colors.green,
           ),
         );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Time()),
+        );
       } else {
-        throw 'Failed to save data: ${body['message']}';
+        throw 'Failed to save data: ${['message']}';
       }
     } catch (error) {
       print("Error: $error");
@@ -760,28 +764,14 @@ class _UpdateTimeState extends State<UpdateTime> {
                       child: MaterialButton(
                         minWidth: double.infinity,
                         color: Color.fromARGB(255, 221, 221, 223),
-                        onPressed: () {},
-                        child: Text("Delete ".tr),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: MaterialButton(
-                        minWidth: double.infinity,
-                        color: Color.fromARGB(255, 221, 221, 223),
                         onPressed: () {
                           _saveApi();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Time()),
+                          );
                         },
                         child: Text("save ".tr),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: MaterialButton(
-                        minWidth: double.infinity,
-                        color: Color.fromARGB(255, 221, 221, 223),
-                        onPressed: () {},
-                        child: Text("copy ".tr),
                       ),
                     ),
                   ],

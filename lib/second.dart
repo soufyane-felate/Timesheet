@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timesheet_1/btnButtomFeatures/settings.dart';
 import 'package:timesheet_1/btnButtomFeatures/time/time.dart';
 import 'package:timesheet_1/calendar_page.dart';
 import 'package:timesheet_1/help.dart';
+import 'package:timesheet_1/selectClient.dart';
 import 'package:timesheet_1/update_time.dart';
 import 'package:intl/intl.dart';
 
@@ -27,6 +29,25 @@ class Second extends StatefulWidget {
 }
 
 class _SecondState extends State<Second> {
+
+
+
+
+
+
+
+Future<List<Customer>?> _loadCustomers() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  List<String>? savedClients = prefs.getStringList('clients');
+  if (savedClients != null) {
+    return savedClients.map((clientString) => Customer.fromString(clientString)).toList();
+  }
+  return null;
+}
+
+
+
+
   late Stopwatch _stopwatch;
   late Timer _timer;
   bool _isRunning = false;
@@ -43,6 +64,7 @@ class _SecondState extends State<Second> {
     _stopwatch = Stopwatch();
     _timer = Timer.periodic(Duration(milliseconds: 30), _updateTime);
     _initializeNotifications();
+    
   }
 
   void _initializeNotifications() async {
@@ -142,44 +164,91 @@ class _SecondState extends State<Second> {
     );
   }
 
-  Widget _buildDropdown(String label) {
-    List<DropdownItem> items = [];
-    String? selectedValue;
+Widget _buildDropdown(String label) {
+  return FutureBuilder<Widget>(
+    future: _loadDropdown(label),
+    builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return CircularProgressIndicator(); 
+      }
+      if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      }
+      return snapshot.data ?? Container(); 
+    },
+  );
+}
 
-    if (label == 'project'.tr) {
-      items = [
-        DropdownItem('Hourly Rate', 'hourly_rate'),
-        DropdownItem('Flat Rate', 'flat_rate'),
-        DropdownItem('Overtime', 'overtime'),
-        DropdownItem('Night Shift', 'night_shift'),
-        DropdownItem('Holiday', 'holiday'),
-        DropdownItem('Unpaid Leave', 'unpaid_leave'),
-      ];
-      selectedValue = _selectedProject;
-    } else if (label == 'client'.tr) {
-      items = [DropdownItem('Default Client', 'default_client')];
-      selectedValue = _selectedClient;
+Future<Widget> _loadDropdown(String label) async {
+  List<DropdownItem> items = [];
+  String? selectedValue;
+
+  if (label == 'project'.tr) {
+    items = [
+      DropdownItem('Hourly Rate', 'hourly_rate'),
+      DropdownItem('Flat Rate', 'flat_rate'),
+      DropdownItem('Overtime', 'overtime'),
+      DropdownItem('Night Shift', 'night_shift'),
+      DropdownItem('Holiday', 'holiday'),
+      DropdownItem('Unpaid Leave', 'unpaid_leave'),
+    ];
+    selectedValue = _selectedProject;
+  } else if (label == 'client'.tr) {
+    // Load clients asynchronously
+    List<Customer>? savedCustomers = await _loadCustomers();
+    items = [
+      DropdownItem('Default Client', 'default_client'),
+    ];
+    if (savedCustomers != null && savedCustomers.isNotEmpty) {
+      items.addAll(savedCustomers.map((customer) => DropdownItem(customer.name, customer.name)));
     }
+    items.add(DropdownItem('Add', 'add'));
 
-    return DropdownButton<String>(
-      value: selectedValue,
-      items: items.map((DropdownItem item) {
-        return DropdownMenuItem<String>(
-          value: item.value,
-          child: Text(item.displayText),
-        );
-      }).toList(),
-      hint: Text(label),
-      onChanged: (String? value) {
-        setState(() {
-          if (label == 'project'.tr) {
-            _selectedProject = value;
-          } else if (label == 'client'.tr) {
+    selectedValue = _selectedClient;
+  }
+
+  return DropdownButton<String>(
+    value: selectedValue,
+    items: items.map((DropdownItem item) {
+      return DropdownMenuItem<String>(
+        value: item.value,
+        child: item.value == 'add'
+            ? TextButton(
+                onPressed: () {
+                  _navigateToAddClientPage();
+                },
+                child: Text(item.displayText, style: TextStyle(color: Colors.blue)),
+              )
+            : Text(item.displayText),
+      );
+    }).toList(),
+    hint: Text(label),
+    onChanged: (String? value) {
+      setState(() {
+        if (label == 'project'.tr) {
+          _selectedProject = value;
+        } else if (label == 'client'.tr) {
+          if (value == 'add') {
+            _navigateToAddClientPage();
+          } else {
             _selectedClient = value;
           }
-        });
-      },
-    );
+        }
+      });
+    },
+  );
+}
+
+
+  void _navigateToAddClientPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ClientAdditionPage()),
+    ).then((newClient) {
+      if (newClient != null) {
+        
+      }
+    });
   }
 
   Widget _buildCounter(String label, String value) {
@@ -275,7 +344,7 @@ class _SecondState extends State<Second> {
                         Text(
                           formattedTime,
                           style: TextStyle(
-                            fontSize: isLargeScreen ? 78 : 65,
+                            fontSize: isLargeScreen ? 78 : 38,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -464,6 +533,9 @@ class _SecondState extends State<Second> {
       ),
     );
   }
+
+ 
+
 }
 
 class TimerUtil {

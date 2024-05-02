@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 class ShowModel {
+  final int id; // Add id field here
   final String selectedProject;
   final String client;
   final List<String> tags;
@@ -15,6 +16,7 @@ class ShowModel {
   final bool billable;
 
   ShowModel({
+    required this.id,
     required this.selectedProject,
     required this.client,
     required this.tags,
@@ -28,8 +30,10 @@ class ShowModel {
     required this.timebreak,
     required this.billable,
   });
+
   factory ShowModel.fromJson(Map<String, dynamic> json) {
     return ShowModel(
+      id: json['id'], 
       selectedProject: json['selectedProject'],
       client: json['client'],
       tags: json['tags'] is List
