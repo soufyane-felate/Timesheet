@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:timesheet_1/models/showModel.dart';
 import 'package:timesheet_1/second.dart';
@@ -42,17 +45,22 @@ class _TimeState extends State<Time> {
   }
 
   Future<void> fetchTimeRecords() async {
-    final response =
-        await http.get(Uri.parse('http://192.168.1.10:8000/api/time_show'));
+    try {
+      final response =
+          await http.get(Uri.parse('http://192.168.1.10:8000/api/time_show'));
 
-    if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(response.body)['data'];
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body)['data'];
 
-      setState(() {
-        timeRecords = data.map((record) => ShowModel.fromJson(record)).toList();
-      });
-    } else {
-      print('Failed to load time records: ${response.statusCode}');
+        setState(() {
+          timeRecords =
+              data.map((record) => ShowModel.fromJson(record)).toList();
+        });
+      } else {
+        print('Failed to load time records: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error fetching time records: $error');
     }
   }
 
@@ -63,13 +71,112 @@ class _TimeState extends State<Time> {
       timeRecords.removeAt(index);
     });
 
-    final response = await http
-        .delete(Uri.parse('http://192.168.1.10:8000/api/time_delete/$itemId'));
+    try {
+      final response = await http.delete(
+          Uri.parse('http://192.168.1.10:8000/api/time_delete/$itemId'));
 
-    if (response.statusCode == 200) {
-      print('Item deleted successfully');
-    } else {
-      print('Failed to delete item: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        print('Item deleted successfully');
+      } else {
+        print('Failed to delete item: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error deleting item: $error');
+    }
+  }
+
+  Future<void> exportToExcel() async {
+    try {
+      final response =
+          await http.get(Uri.parse('http://192.168.1.10:8000/api/export'));
+
+      if (response.statusCode == 200) {
+        if (response.bodyBytes.isEmpty) {
+          print('Invalid response: Empty Excel data');
+          return;
+        }
+
+        if (await Permission.storage.request().isGranted) {
+          final directory = await getExternalStorageDirectory();
+          if (directory == null) {
+            print('Error: Failed to get external storage directory');
+            return;
+          }
+
+          final filePath = '${directory.path}/time_records.xlsx';
+          final file = File(filePath);
+
+          await file.writeAsBytes(response.bodyBytes);
+
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Export Successful'),
+                content: Text('Time records exported to Excel successfully.'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          print('Error: Storage permission not granted');
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Storage Permission Required'),
+                content: Text(
+                    'This app needs storage permission to export Excel files. Please grant permission and try again.'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      } else {
+        print('Failed to export time records: ${response.statusCode}');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Export Failed'),
+              content: Text('Failed to export time records to Excel.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } catch (error) {
+      print('Error exporting time records: $error');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Export Failed'),
+            content: Text('Failed to export time records to Excel.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -159,6 +266,14 @@ class _TimeState extends State<Time> {
             ),
           ],
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.file_download),
+            onPressed: () {
+              exportToExcel();
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -253,7 +368,6 @@ class _TimeState extends State<Time> {
                             )
                           ],
                         ),
-                        // onTap: ...
                       ),
                     ),
                   );

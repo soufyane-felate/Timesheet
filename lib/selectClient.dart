@@ -21,12 +21,12 @@ class Customer {
       throw FormatException('Invalid client string: $clientstring');
     }
     return Customer(
-      parts[0], // Name
-      parts[1], // Description
-      parts[2], // Address
-      parts[3], // Phone
-      parts[4], // Fax
-      parts[5], // Email
+      parts[0], 
+      parts[1], 
+      parts[2], 
+      parts[3], 
+      parts[4], 
+      parts[5], 
     );
   }
 
@@ -35,7 +35,6 @@ class Customer {
   }
 }
 
-// Client Addition Page
 class ClientAdditionPage extends StatefulWidget {
   @override
   _ClientAdditionPageState createState() => _ClientAdditionPageState();
@@ -49,13 +48,13 @@ class _ClientAdditionPageState extends State<ClientAdditionPage> {
   TextEditingController _faxController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
 
-// Function to save the customer
+  // Function to save the customer
   Future<Customer?> _saveCustomer() async {
     String name = _nameController.text;
     String description = _descriptionController.text;
     String address = _addressController.text;
     String phone = _phoneController.text;
-    String fax = _faxController.text; // Added fax
+    String fax = _faxController.text; 
     String email = _emailController.text;
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -64,7 +63,6 @@ class _ClientAdditionPageState extends State<ClientAdditionPage> {
         Customer(name, description, address, phone, fax, email).toString());
     await prefs.setStringList('clients', savedclients);
 
-    // Clear input fields after saving
     _nameController.clear();
     _descriptionController.clear();
     _addressController.clear();
@@ -72,7 +70,6 @@ class _ClientAdditionPageState extends State<ClientAdditionPage> {
     _faxController.clear();
     _emailController.clear();
 
-    // Return the new customer
     return Customer(name, description, address, phone, fax, email);
   }
 
@@ -82,8 +79,13 @@ class _ClientAdditionPageState extends State<ClientAdditionPage> {
       appBar: AppBar(
         title: Text('Add Client'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom + 12,
+          left: 20,
+          right: 20,
+          top: 25,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

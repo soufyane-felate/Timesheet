@@ -29,24 +29,16 @@ class Second extends StatefulWidget {
 }
 
 class _SecondState extends State<Second> {
-
-
-
-
-
-
-
-Future<List<Customer>?> _loadCustomers() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  List<String>? savedClients = prefs.getStringList('clients');
-  if (savedClients != null) {
-    return savedClients.map((clientString) => Customer.fromString(clientString)).toList();
+  Future<List<Customer>?> _loadCustomers() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? savedClients = prefs.getStringList('clients');
+    if (savedClients != null) {
+      return savedClients
+          .map((clientString) => Customer.fromString(clientString))
+          .toList();
+    }
+    return null;
   }
-  return null;
-}
-
-
-
 
   late Stopwatch _stopwatch;
   late Timer _timer;
@@ -64,7 +56,6 @@ Future<List<Customer>?> _loadCustomers() async {
     _stopwatch = Stopwatch();
     _timer = Timer.periodic(Duration(milliseconds: 30), _updateTime);
     _initializeNotifications();
-    
   }
 
   void _initializeNotifications() async {
@@ -164,90 +155,87 @@ Future<List<Customer>?> _loadCustomers() async {
     );
   }
 
-Widget _buildDropdown(String label) {
-  return FutureBuilder<Widget>(
-    future: _loadDropdown(label),
-    builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return CircularProgressIndicator(); 
-      }
-      if (snapshot.hasError) {
-        return Text('Error: ${snapshot.error}');
-      }
-      return snapshot.data ?? Container(); 
-    },
-  );
-}
-
-Future<Widget> _loadDropdown(String label) async {
-  List<DropdownItem> items = [];
-  String? selectedValue;
-
-  if (label == 'project'.tr) {
-    items = [
-      DropdownItem('Hourly Rate', 'hourly_rate'),
-      DropdownItem('Flat Rate', 'flat_rate'),
-      DropdownItem('Overtime', 'overtime'),
-      DropdownItem('Night Shift', 'night_shift'),
-      DropdownItem('Holiday', 'holiday'),
-      DropdownItem('Unpaid Leave', 'unpaid_leave'),
-    ];
-    selectedValue = _selectedProject;
-  } else if (label == 'client'.tr) {
-    // Load clients asynchronously
-    List<Customer>? savedCustomers = await _loadCustomers();
-    items = [
-      DropdownItem('Default Client', 'default_client'),
-    ];
-    if (savedCustomers != null && savedCustomers.isNotEmpty) {
-      items.addAll(savedCustomers.map((customer) => DropdownItem(customer.name, customer.name)));
-    }
-    items.add(DropdownItem('Add', 'add'));
-
-    selectedValue = _selectedClient;
+  Widget _buildDropdown(String label) {
+    return FutureBuilder<Widget>(
+      future: _loadDropdown(label),
+      builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {}
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        return snapshot.data ?? Container();
+      },
+    );
   }
 
-  return DropdownButton<String>(
-    value: selectedValue,
-    items: items.map((DropdownItem item) {
-      return DropdownMenuItem<String>(
-        value: item.value,
-        child: item.value == 'add'
-            ? TextButton(
-                onPressed: () {
-                  _navigateToAddClientPage();
-                },
-                child: Text(item.displayText, style: TextStyle(color: Colors.blue)),
-              )
-            : Text(item.displayText),
-      );
-    }).toList(),
-    hint: Text(label),
-    onChanged: (String? value) {
-      setState(() {
-        if (label == 'project'.tr) {
-          _selectedProject = value;
-        } else if (label == 'client'.tr) {
-          if (value == 'add') {
-            _navigateToAddClientPage();
-          } else {
-            _selectedClient = value;
-          }
-        }
-      });
-    },
-  );
-}
+  Future<Widget> _loadDropdown(String label) async {
+    List<DropdownItem> items = [];
+    String? selectedValue;
 
+    if (label == 'project'.tr) {
+      items = [
+        DropdownItem('Hourly Rate', 'hourly_rate'),
+        DropdownItem('Flat Rate', 'flat_rate'),
+        DropdownItem('Overtime', 'overtime'),
+        DropdownItem('Night Shift', 'night_shift'),
+        DropdownItem('Holiday', 'holiday'),
+        DropdownItem('Unpaid Leave', 'unpaid_leave'),
+      ];
+      selectedValue = _selectedProject;
+    } else if (label == 'client'.tr) {
+      // Load clients asynchronously
+      List<Customer>? savedCustomers = await _loadCustomers();
+      items = [
+        DropdownItem('Default Client', 'default_client'),
+      ];
+      if (savedCustomers != null && savedCustomers.isNotEmpty) {
+        items.addAll(savedCustomers
+            .map((customer) => DropdownItem(customer.name, customer.name)));
+      }
+      items.add(DropdownItem('Add', 'add'));
+
+      selectedValue = _selectedClient;
+    }
+
+    return DropdownButton<String>(
+      value: selectedValue,
+      items: items.map((DropdownItem item) {
+        return DropdownMenuItem<String>(
+          value: item.value,
+          child: item.value == 'add'
+              ? TextButton(
+                  onPressed: () {
+                    _navigateToAddClientPage();
+                  },
+                  child: Text(item.displayText,
+                      style: TextStyle(color: Colors.blue)),
+                )
+              : Text(item.displayText),
+        );
+      }).toList(),
+      hint: Text(label),
+      onChanged: (String? value) {
+        setState(() {
+          if (label == 'project'.tr) {
+            _selectedProject = value;
+          } else if (label == 'client'.tr) {
+            if (value == 'add') {
+              _navigateToAddClientPage();
+            } else {
+              _selectedClient = value;
+            }
+          }
+        });
+      },
+    );
+  }
 
   void _navigateToAddClientPage() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => ClientAdditionPage()),
     ).then((newClient) {
-      if (newClient != null) {
-        
-      }
+      if (newClient != null) {}
     });
   }
 
@@ -470,15 +458,6 @@ Future<Widget> _loadDropdown(String label) async {
                   },
                 ),
                 GButton(
-                  icon: Icons.bar_chart,
-                  text: 'statistics'.tr,
-                  textStyle: TextStyle(
-                    color: const Color.fromARGB(255, 3, 35, 61),
-                  ),
-                  backgroundColor: Color.fromARGB(255, 7, 230, 238),
-                  onPressed: () {},
-                ),
-                GButton(
                   icon: Icons.receipt,
                   text: 'invoice'.tr,
                   textStyle: TextStyle(
@@ -533,9 +512,6 @@ Future<Widget> _loadDropdown(String label) async {
       ),
     );
   }
-
- 
-
 }
 
 class TimerUtil {
