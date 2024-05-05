@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:open_file/open_file.dart';
 import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:timesheet_1/btnButtomFeatures/invoice.dart';
 
 import 'package:timesheet_1/models/showModel.dart';
 import 'package:timesheet_1/second.dart';
@@ -64,6 +66,115 @@ class _TimeState extends State<Time> {
     }
   }
 
+  Future<void> exportToExcel() async {
+  try {
+    final response =
+        await http.get(Uri.parse('http://192.168.1.10:8000/api/export'));
+
+    if (response.statusCode == 200) {
+      if (response.bodyBytes.isEmpty) {
+        print('Invalid response: Empty Excel data');
+        return;
+      }
+
+      if (await Permission.storage.request().isGranted) {
+        final directory = await getExternalStorageDirectory();
+        if (directory == null) {
+          print('Error: Failed to get external storage directory');
+          return;
+        }
+
+        final filePath = '${directory.path}/time_records.xlsx';
+        final file = File(filePath);
+
+        await file.writeAsBytes(response.bodyBytes);
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Export Successful'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Time records exported to Excel successfully.'),
+                  SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      OpenFile.open(filePath);
+                    },
+                    child: Text('Open Excel'),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        print('Error: Storage permission not granted');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Storage Permission Required'),
+              content: Text(
+                  'This app needs storage permission to export Excel files. Please grant permission and try again.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } else {
+      print('Failed to export time records: ${response.statusCode}');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Export Failed'),
+            content: Text('Failed to export time records to Excel.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  } catch (error) {
+    print('Error exporting time records: $error');
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Export Failed'),
+          content: Text('Failed to export time records to Excel.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+
   Future<void> deleteItem(int index) async {
     int itemId = timeRecords[index].id;
 
@@ -85,99 +196,17 @@ class _TimeState extends State<Time> {
     }
   }
 
-  Future<void> exportToExcel() async {
-    try {
-      final response =
-          await http.get(Uri.parse('http://192.168.1.10:8000/api/export'));
+  void navigateToInvoicePage(String client) {
+    // Filter records based on client
+    List<ShowModel> filteredRecords =
+        timeRecords.where((record) => record.client == client).toList();
 
-      if (response.statusCode == 200) {
-        if (response.bodyBytes.isEmpty) {
-          print('Invalid response: Empty Excel data');
-          return;
-        }
-
-        if (await Permission.storage.request().isGranted) {
-          final directory = await getExternalStorageDirectory();
-          if (directory == null) {
-            print('Error: Failed to get external storage directory');
-            return;
-          }
-
-          final filePath = '${directory.path}/time_records.xlsx';
-          final file = File(filePath);
-
-          await file.writeAsBytes(response.bodyBytes);
-
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Export Successful'),
-                content: Text('Time records exported to Excel successfully.'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text('OK'),
-                  ),
-                ],
-              );
-            },
-          );
-        } else {
-          print('Error: Storage permission not granted');
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Storage Permission Required'),
-                content: Text(
-                    'This app needs storage permission to export Excel files. Please grant permission and try again.'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text('OK'),
-                  ),
-                ],
-              );
-            },
-          );
-        }
-      } else {
-        print('Failed to export time records: ${response.statusCode}');
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Export Failed'),
-              content: Text('Failed to export time records to Excel.'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      }
-    } catch (error) {
-      print('Error exporting time records: $error');
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Export Failed'),
-            content: Text('Failed to export time records to Excel.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => InvoicePage(filteredRecords),
+      ),
+    );
   }
 
   @override
@@ -309,17 +338,10 @@ class _TimeState extends State<Time> {
                   final record = timeRecords[index];
                   final color = colorList[index % colorList.length];
 
-                  return Dismissible(
-                    key: Key(record.id.toString()),
-                    onDismissed: (direction) {
-                      deleteItem(index);
+                  return GestureDetector(
+                    onTap: () {
+                      navigateToInvoicePage(record.client);
                     },
-                    background: Container(
-                      color: Colors.red,
-                      child: Icon(Icons.delete),
-                      alignment: Alignment.centerRight,
-                      padding: EdgeInsets.only(right: 20),
-                    ),
                     child: Container(
                       child: ListTile(
                         title: Column(
@@ -367,6 +389,12 @@ class _TimeState extends State<Time> {
                               color: Colors.black,
                             )
                           ],
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () {
+                            deleteItem(index);
+                          },
                         ),
                       ),
                     ),

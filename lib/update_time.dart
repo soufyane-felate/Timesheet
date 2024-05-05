@@ -10,8 +10,9 @@ import 'package:timesheet_1/btnButtomFeatures/time/time.dart';
 class UpdateTime extends StatefulWidget {
   final String? selectedProject;
   final String? selectedClientName;
+  final DateTime? startTime;
 
-  UpdateTime({this.selectedProject, this.selectedClientName});
+  UpdateTime({this.selectedProject, this.selectedClientName, this.startTime});
 
   @override
   _UpdateTimeState createState() => _UpdateTimeState();
@@ -34,13 +35,10 @@ class _UpdateTimeState extends State<UpdateTime> {
   }
 
   String _getCurrentTime() {
-    return DateFormat('HH:mm').format(DateTime(
-      selectedDate.year,
-      selectedDate.month,
-      selectedDate.day,
-      selectedTime.hour,
-      selectedTime.minute,
-    ));
+    if (widget.startTime != null) {
+      return DateFormat('HH/mm').format(widget.startTime!);
+    }
+    return '';
   }
 
   String _getCurrentTime2() {
@@ -745,33 +743,32 @@ class _UpdateTimeState extends State<UpdateTime> {
                         )),
                   ],
                 ),
-                MaterialButton(
-                  minWidth: double.infinity,
-                  color: Color.fromARGB(255, 221, 221, 223),
-                  onPressed: () {},
-                  child: Text("Add Expense / Deduction".tr),
-                ),
-                MaterialButton(
-                  minWidth: double.infinity,
-                  color: Color.fromARGB(255, 221, 221, 223),
-                  onPressed: () {},
-                  child: Text("Add Mileage".tr),
+                Divider(
+                  height: 20,
                 ),
                 Row(
                   children: [
                     Expanded(
                       flex: 1,
-                      child: MaterialButton(
-                        minWidth: double.infinity,
-                        color: Color.fromARGB(255, 221, 221, 223),
-                        onPressed: () {
-                          _saveApi();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Time()),
-                          );
-                        },
-                        child: Text("save ".tr),
+                      child: Container(
+                        color: Color.fromARGB(255, 9, 172, 194),
+                        child: MaterialButton(
+                          minWidth: double.infinity,
+                          onPressed: () {
+                            _saveApi();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Time()),
+                            );
+                          },
+                          child: Text(
+                            "save ".tr,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
                       ),
                     ),
                   ],

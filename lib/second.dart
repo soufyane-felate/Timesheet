@@ -6,10 +6,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timesheet_1/btnButtomFeatures/invoice.dart';
 import 'package:timesheet_1/btnButtomFeatures/settings.dart';
 import 'package:timesheet_1/btnButtomFeatures/time/time.dart';
 import 'package:timesheet_1/calendar_page.dart';
 import 'package:timesheet_1/help.dart';
+import 'package:timesheet_1/models/showModel.dart';
 import 'package:timesheet_1/selectClient.dart';
 import 'package:timesheet_1/update_time.dart';
 import 'package:intl/intl.dart';
@@ -29,6 +31,8 @@ class Second extends StatefulWidget {
 }
 
 class _SecondState extends State<Second> {
+  List<ShowModel>? get records => null;
+
   Future<List<Customer>?> _loadCustomers() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? savedClients = prefs.getStringList('clients');
@@ -42,6 +46,8 @@ class _SecondState extends State<Second> {
 
   late Stopwatch _stopwatch;
   late Timer _timer;
+  late DateTime _startTime;
+
   bool _isRunning = false;
   int _selectedIndex = 0;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -56,6 +62,7 @@ class _SecondState extends State<Second> {
     _stopwatch = Stopwatch();
     _timer = Timer.periodic(Duration(milliseconds: 30), _updateTime);
     _initializeNotifications();
+    _startTime = DateTime.now();
   }
 
   void _initializeNotifications() async {
@@ -111,6 +118,7 @@ class _SecondState extends State<Second> {
       _stopwatch.stop();
     } else {
       _stopwatch.start();
+      _startTime = DateTime.now();
     }
     setState(() {
       _isRunning = !_isRunning;
@@ -143,7 +151,8 @@ class _SecondState extends State<Second> {
                   MaterialPageRoute(
                     builder: (context) => UpdateTime(
                         selectedProject: _selectedProject,
-                        selectedClientName: _selectedClient),
+                        selectedClientName: _selectedClient,
+                        startTime: _startTime),
                   ),
                 );
               },
@@ -251,6 +260,8 @@ class _SecondState extends State<Second> {
 
   @override
   Widget build(BuildContext context) {
+    String startTime =
+        _startTime != null ? DateFormat('HH:mm').format(_startTime) : '';
     String formattedTime = TimerUtil.formatTime(_stopwatch.elapsedMilliseconds);
     String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
@@ -316,23 +327,36 @@ class _SecondState extends State<Second> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding:
-                              EdgeInsets.only(right: isLargeScreen ? 120 : 10),
-                          child: Text(
-                            currentDate,
-                            style: const TextStyle(
-                              backgroundColor: Colors.grey,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                        Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  right: isLargeScreen ? 120 : 10),
+                              child: Text(
+                                currentDate,
+                                style: const TextStyle(
+                                  backgroundColor: Colors.grey,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
-                          ),
+                            Text(
+                              startTime,
+                              style: TextStyle(
+                                backgroundColor: Colors.grey,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            )
+                          ],
                         ),
                         Text(
                           formattedTime,
                           style: TextStyle(
-                            fontSize: isLargeScreen ? 78 : 38,
+                            fontSize: isLargeScreen ? 78 : 48,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -458,15 +482,6 @@ class _SecondState extends State<Second> {
                   },
                 ),
                 GButton(
-                  icon: Icons.receipt,
-                  text: 'invoice'.tr,
-                  textStyle: TextStyle(
-                    color: const Color.fromARGB(255, 3, 35, 61),
-                  ),
-                  backgroundColor: Color.fromARGB(255, 7, 230, 238),
-                  onPressed: () {},
-                ),
-                GButton(
                   icon: Icons.settings,
                   text: 'settings'.tr,
                   textStyle: TextStyle(
@@ -476,19 +491,10 @@ class _SecondState extends State<Second> {
                   onPressed: () {
                     setState(() {});
                     Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => settings()),
+                    context,
+                    MaterialPageRoute(builder: (context) => settings()),
                     );
                   },
-                ),
-                GButton(
-                  icon: Icons.data_usage,
-                  text: 'data'.tr,
-                  textStyle: TextStyle(
-                    color: const Color.fromARGB(255, 3, 35, 61),
-                  ),
-                  backgroundColor: Color.fromARGB(255, 7, 230, 238),
-                  onPressed: () {},
                 ),
                 GButton(
                   icon: Icons.exit_to_app,

@@ -29,7 +29,6 @@ class LanguageSelection extends StatelessWidget {
             onTap: () async {
               Get.updateLocale(locale);
 
-              // SharedPreferences
               final SharedPreferences prefs =
                   await SharedPreferences.getInstance();
               await prefs.setString('locale', locale.languageCode);
