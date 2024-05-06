@@ -180,7 +180,7 @@ class _TimeState extends State<Time> {
     setState(() {
       timeRecords.removeAt(index);
     });
-
+    
     try {
       final response = await http.delete(
           Uri.parse('http://192.168.1.36:8000/api/time_delete/$itemId'));
@@ -196,7 +196,6 @@ class _TimeState extends State<Time> {
   }
 
   void navigateToInvoicePage(String client) {
-    // Filter records based on client
     List<ShowModel> filteredRecords =
         timeRecords.where((record) => record.client == client).toList();
 
@@ -344,56 +343,48 @@ class _TimeState extends State<Time> {
                     onTap: () {
                       navigateToInvoicePage(record.client);
                     },
-                    child: Container(
+                    child: Card(
+                      elevation: 1.0,
+                      margin:
+                          EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
                       child: ListTile(
-                        title: Column(
+                        isThreeLine: true,
+                        leading: Container(
+                          width: 10,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: color,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        title: Text(
+                          '${record.selectedProject} - ${record.client}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      width: 20,
-                                      height: 40,
-                                      color: color,
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  '${record.timeIn}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    height: 1.5,
-                                  ),
-                                ),
-                                Text(
-                                  '${record.timeOut}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    height: 1.5,
-                                  ),
-                                ),
-                                Text(
-                                  '${record.selectedProject} - ${record.client}',
-                                ),
-                                Text(
-                                  '${record.timebreak} - ${record.workingHours}',
-                                ),
-                                Text('${record.description}'),
-                                Text('${record.notes} - ${record.tags}'),
-                              ],
+                          children: <Widget>[
+                            Text(
+                              'In: ${record.timeIn} - Out: ${record.timeOut}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                height: 1.4,
+                              ),
                             ),
-                            Divider(
-                              height: 2,
-                              color: Colors.black,
-                            )
+                            Text(
+                              'Break: ${record.timebreak} - Hours: ${record.workingHours}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                height: 1.4,
+                              ),
+                            ),
+                            Text('${record.description}'),
                           ],
                         ),
                         trailing: IconButton(
-                          icon: Icon(Icons.delete),
+                          icon: Icon(Icons.delete, color: Colors.red),
                           onPressed: () {
                             deleteItem(index);
                           },

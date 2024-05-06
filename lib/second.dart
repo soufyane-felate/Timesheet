@@ -83,9 +83,21 @@ class _SecondState extends State<Second> {
 
   void _showNotification(String title, String body) async {
     String elapsedTime = TimerUtil.formatTime(_stopwatch.elapsedMilliseconds);
-    //body = '$body\nElapsed Time: $elapsedTime';
+    const String startButtonTitle = 'Start';
+    const String resetButtonTitle = 'Reset';
 
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    List<AndroidNotificationAction> actions = [
+      AndroidNotificationAction(
+        startButtonTitle,
+        'start_action',
+      ),
+      AndroidNotificationAction(
+        resetButtonTitle,
+        'reset_action',
+      ),
+    ];
+
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       '1',
       'Timesheet App',
@@ -94,17 +106,18 @@ class _SecondState extends State<Second> {
       ticker: 'ticker',
       enableVibration: false,
       playSound: false,
+      actions: actions,
     );
 
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics); // Removed const here
 
     await flutterLocalNotificationsPlugin.show(
       0,
       title,
       body,
       platformChannelSpecifics,
-    );
+      payload: elapsedTime,);
   }
 
   @override
@@ -334,7 +347,7 @@ class _SecondState extends State<Second> {
                               child: Text(
                                 currentDate,
                                 style: const TextStyle(
-                                  //  backgroundColor: Colors.grey,
+                                 //backgroundColor: Colors.grey,
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -532,3 +545,19 @@ class TimerUtil {
     return "$hoursStr:$minutesStr:$secondsStr";
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

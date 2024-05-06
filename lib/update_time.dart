@@ -36,7 +36,7 @@ class _UpdateTimeState extends State<UpdateTime> {
 
   String _getCurrentTime() {
     if (widget.startTime != null) {
-      return DateFormat('HH/mm').format(widget.startTime!);
+      return DateFormat('HH:mm').format(widget.startTime!);
     }
     return '';
   }
