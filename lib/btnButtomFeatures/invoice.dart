@@ -55,11 +55,11 @@ class _InvoicePageState extends State<InvoicePage> {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(left: 10),
+            margin: EdgeInsets.only(left: 8),
             child: Row(
               children: [
                 Image.asset('images/timesheet.png'),
-                SizedBox(width: 20),
+                //   SizedBox(width: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

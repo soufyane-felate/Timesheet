@@ -192,7 +192,6 @@ class _SecondState extends State<Second> {
       ];
       selectedValue = _selectedProject;
     } else if (label == 'client'.tr) {
-      // Load clients asynchronously
       List<Customer>? savedCustomers = await _loadCustomers();
       items = [
         DropdownItem('Default Client', 'default_client'),
@@ -335,7 +334,7 @@ class _SecondState extends State<Second> {
                               child: Text(
                                 currentDate,
                                 style: const TextStyle(
-                                  backgroundColor: Colors.grey,
+                                  //  backgroundColor: Colors.grey,
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -345,7 +344,7 @@ class _SecondState extends State<Second> {
                             Text(
                               startTime,
                               style: TextStyle(
-                                backgroundColor: Colors.grey,
+                                //  backgroundColor: Colors.grey,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
@@ -491,8 +490,8 @@ class _SecondState extends State<Second> {
                   onPressed: () {
                     setState(() {});
                     Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => settings()),
+                      context,
+                      MaterialPageRoute(builder: (context) => settings()),
                     );
                   },
                 ),
